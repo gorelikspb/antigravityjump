@@ -37,7 +37,15 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --import
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --export-release "Web" builds/web/index.html
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --export-release "Windows Desktop" builds/windows/AntiGravityJump.exe
-          cd builds/windows && zip -r ../AntiGravityJump-Windows.zip .
+          cd builds/web && zip -r ../AntiGravityJump-Web-ItchIO.zip .
+          cd ../windows && zip -r ../AntiGravityJump-Windows.zip .
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete v0.2.0 --yes || true
+          gh release create v0.2.0 builds/AntiGravityJump-Windows.zip builds/AntiGravityJump-Web-ItchIO.zip --title "v0.2.0 — Playable Web & Windows Release" --notes "Play online at https://gorelikspb.github.io/antigravityjump/ or download the Windows .zip / itch.io HTML5 .zip below."
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
