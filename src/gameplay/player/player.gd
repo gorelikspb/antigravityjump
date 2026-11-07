@@ -26,9 +26,16 @@ var _was_on_floor: bool = false
 var _dead: bool = false
 var _frozen: bool = false
 
+# Juice variables (Sprint 2)
+var _squash: Vector2 = Vector2.ONE
+var _screen_shake_trauma: float = 0.0
+
 @onready var _visual: Node2D = $Visual
 @onready var _camera: Camera2D = $Camera2D
 @onready var _death_burst: CPUParticles2D = $DeathBurst
+@onready var _ghost_ray: RayCast2D = $GhostRay
+@onready var _ghost_line: Line2D = $GhostLine
+@onready var _ghost_marker: Polygon2D = $GhostMarker
 
 
 func _ready() -> void:
@@ -58,6 +65,9 @@ func _physics_process(delta: float) -> void:
 		_jump_buffer_timer = 0.0
 		_coyote_timer = 0.0
 		_is_jumping = true
+		_squash = Vector2(1.0 - config.squash_stretch_intensity, 1.0 + config.squash_stretch_intensity)
+		if has_node("/root/SoundManager"):
+			get_node("/root/SoundManager").play(AudioSynthesizer.Sound.JUMP)
 	# Variable jump height.
 	if _is_jumping and v_n < 0.0 and Input.is_action_just_released(&"jump"):
 		v_n *= config.jump_cut_multiplier
@@ -69,8 +79,16 @@ func _physics_process(delta: float) -> void:
 	_handle_flip_input()
 
 	move_and_slide()
+	
+	if not _was_on_floor and is_on_floor():
+		_squash = Vector2(1.0 + config.squash_stretch_intensity, 1.0 - config.squash_stretch_intensity)
+		if has_node("/root/SoundManager"):
+			get_node("/root/SoundManager").play(AudioSynthesizer.Sound.LAND)
+			
 	_was_on_floor = on_floor
 	_update_visual(delta)
+	_update_ghost_ray()
+	_update_shake(delta)
 
 
 # --- Public API (used by Level, GravityZone, Spikes) -------------------------
@@ -90,6 +108,8 @@ func set_gravity(dir: int, forced: bool = false) -> bool:
 	elif not _can_flip_for_free():
 		if _air_charges <= 0:
 			flip_denied.emit()
+			if has_node("/root/SoundManager"):
+				get_node("/root/SoundManager").play(AudioSynthesizer.Sound.DENY)
 			return false
 		_air_charges -= 1
 		air_charges_changed.emit(_air_charges, config.air_flip_charges)
@@ -97,6 +117,10 @@ func set_gravity(dir: int, forced: bool = false) -> bool:
 	_coyote_timer = 0.0
 	_is_jumping = false
 	_apply_gravity_dir(dir)
+
+	if has_node("/root/SoundManager"):
+		get_node("/root/SoundManager").play(AudioSynthesizer.Sound.FLIP)
+	_spawn_trail()
 
 	# Rule 7: keep world velocity, but cap speed directed against the new gravity.
 	var split := GravityMath.split_velocity(velocity, gravity_dir)
@@ -160,8 +184,13 @@ func _die() -> void:
 	_dead = true
 	velocity = Vector2.ZERO
 	_visual.visible = false
+	_ghost_line.visible = false
+	_ghost_marker.visible = false
 	_death_burst.restart()
 	_death_burst.emitting = true
+	_screen_shake_trauma = 0.6
+	if has_node("/root/SoundManager"):
+		get_node("/root/SoundManager").play(AudioSynthesizer.Sound.DEATH)
 	died.emit()
 
 
@@ -219,5 +248,58 @@ func _update_visual(delta: float) -> void:
 	var target := GravityMath.visual_rotation(gravity_dir)
 	var weight := 1.0 - exp(-config.rotate_visual_speed * delta)
 	_visual.rotation = lerp_angle(_visual.rotation, target, weight)
+	
+	# Squash & Stretch recovery
+	_squash = _squash.move_toward(Vector2.ONE, delta * 4.0)
+	_visual.scale = _squash
+	
 	if config.camera_follows_gravity:
 		_camera.rotation = _visual.rotation
+
+
+func _update_shake(delta: float) -> void:
+	if _screen_shake_trauma > 0.0:
+		_screen_shake_trauma = maxf(_screen_shake_trauma - delta * 2.0, 0.0)
+		var shake := _screen_shake_trauma * _screen_shake_trauma * 14.0
+		_camera.offset = Vector2(randf_range(-shake, shake), randf_range(-shake, shake))
+	else:
+		_camera.offset = Vector2.ZERO
+
+
+func _update_ghost_ray() -> void:
+	if not config.show_ghost_ray or _dead or _frozen:
+		_ghost_line.visible = false
+		_ghost_marker.visible = false
+		return
+		
+	var g_vec := GravityMath.to_vector(gravity_dir)
+	_ghost_ray.target_position = g_vec * 1200.0
+	_ghost_ray.force_raycast_update()
+	
+	if _ghost_ray.is_colliding():
+		var hit_pt: Vector2 = _ghost_ray.get_collision_point()
+		var local_hit: Vector2 = to_local(hit_pt)
+		_ghost_line.clear_points()
+		_ghost_line.add_point(Vector2.ZERO)
+		_ghost_line.add_point(local_hit)
+		_ghost_line.visible = true
+		_ghost_marker.position = local_hit
+		_ghost_marker.rotation = GravityMath.visual_rotation(gravity_dir)
+		_ghost_marker.visible = true
+	else:
+		_ghost_line.visible = false
+		_ghost_marker.visible = false
+
+
+func _spawn_trail() -> void:
+	var trail := Polygon2D.new()
+	trail.polygon = PackedVector2Array([-11, -11, 11, -11, 11, 11, -11, 11])
+	trail.color = Color(0.31, 0.86, 1.0, 0.45)
+	trail.global_position = global_position
+	trail.rotation = _visual.rotation
+	get_parent().add_child(trail)
+	
+	var tween := trail.create_tween()
+	tween.tween_property(trail, "scale", Vector2.ZERO, 0.22)
+	tween.parallel().tween_property(trail, "modulate:a", 0.0, 0.22)
+	tween.tween_callback(trail.queue_free)

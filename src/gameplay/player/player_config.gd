@@ -26,6 +26,9 @@ extends Resource
 @export_group("Presentation")
 @export_range(1.0, 60.0, 0.5, "suffix:rad/s") var rotate_visual_speed: float = 18.0
 @export var camera_follows_gravity: bool = false
+@export var show_ghost_ray: bool = true
+@export var squash_stretch_intensity: float = 0.25
+
 
 @export_group("Death")
 @export_range(0.0, 2.0, 0.05, "suffix:s") var respawn_delay: float = 0.35

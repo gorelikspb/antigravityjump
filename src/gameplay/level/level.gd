@@ -108,6 +108,8 @@ func _do_respawn() -> void:
 func _on_checkpoint_activated(respawn_position: Vector2) -> void:
 	_respawn_position = respawn_position
 	_respawn_gravity = _player.gravity_dir
+	if has_node("/root/SoundManager"):
+		get_node("/root/SoundManager").play(AudioSynthesizer.Sound.CHECKPOINT)
 	checkpoint_reached.emit()
 
 
@@ -117,4 +119,6 @@ func _on_goal_reached() -> void:
 	_completed = true
 	_running = false
 	_player.freeze(true)
+	if has_node("/root/SoundManager"):
+		get_node("/root/SoundManager").play(AudioSynthesizer.Sound.GOAL)
 	level_completed.emit(_elapsed, _deaths)

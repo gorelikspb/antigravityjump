@@ -13,6 +13,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [autoload]
 
 InputBootstrap="*res://src/core/input_bootstrap.gd"
+SoundManager="*res://src/core/sound_manager.gd"
 
 [display]
 

@@ -44,6 +44,18 @@ scale_amount_min = 3.0
 scale_amount_max = 5.0
 color = Color(0.31, 0.86, 1, 1)
 
+[node name="GhostRay" type="RayCast2D" parent="."]
+collision_mask = 1
+exclude_parent = true
+
+[node name="GhostLine" type="Line2D" parent="."]
+width = 2.0
+default_color = Color(0.31, 0.86, 1, 0.25)
+
+[node name="GhostMarker" type="Polygon2D" parent="."]
+color = Color(0.31, 0.86, 1, 0.5)
+polygon = PackedVector2Array(-8, -2, 8, -2, 8, 2, -8, 2)
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
