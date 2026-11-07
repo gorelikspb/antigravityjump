@@ -13,6 +13,7 @@
 script = ExtResource("1_level")
 level_name = "Level 01 - First Flip"
 level_bounds = Rect2(0, 0, 2064, 720)
+next_level = "res://src/levels/level_02.tscn"
 
 [node name="Geometry" type="Node2D" parent="."]
 

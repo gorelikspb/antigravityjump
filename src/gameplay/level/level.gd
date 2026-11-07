@@ -102,6 +102,9 @@ func _on_player_died() -> void:
 func _do_respawn() -> void:
 	if _completed:
 		return
+	for node in get_tree().get_nodes_in_group(&"crystals"):
+		if is_ancestor_of(node):
+			node.call(&"reset")
 	_player.respawn(_respawn_position, _respawn_gravity)
 
 

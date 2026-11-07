@@ -169,6 +169,16 @@ func get_air_charges() -> int:
 	return _air_charges
 
 
+func refill_air_charges() -> bool:
+	if _dead or _frozen:
+		return false
+	if _air_charges >= config.air_flip_charges:
+		return false
+	_refill_charges(true)
+	return true
+
+
+
 func set_camera_limits(rect: Rect2) -> void:
 	_camera.limit_left = int(rect.position.x)
 	_camera.limit_top = int(rect.position.y)
