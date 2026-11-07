@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://src/gameplay/level/gravity_zone.gd" id="6_zone"]
 [ext_resource type="Script" path="res://src/gameplay/level/checkpoint.gd" id="7_checkpoint"]
 [ext_resource type="Script" path="res://src/gameplay/level/goal.gd" id="8_goal"]
+[ext_resource type="Script" path="res://src/gameplay/level/recharge_crystal.gd" id="9_crystal"]
 
 [node name="Level01" type="Node2D"]
 script = ExtResource("1_level")
@@ -65,6 +66,26 @@ facing = 1
 size = Vector2(300, 24)
 
 [node name="Triggers" type="Node2D" parent="."]
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="Crystal1" type="Area2D" parent="Pickups"]
+position = Vector2(424, 140)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
+
+[node name="Crystal2" type="Area2D" parent="Pickups"]
+position = Vector2(960, 360)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
+
+[node name="Crystal3" type="Area2D" parent="Pickups"]
+position = Vector2(1680, 520)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
 
 [node name="SafetyZoneDown" type="Area2D" parent="Triggers"]
 position = Vector2(1120, 80)

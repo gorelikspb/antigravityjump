@@ -15,7 +15,7 @@
 script = ExtResource("1_level")
 level_name = "Level 03 - Moving Grounds"
 level_bounds = Rect2(0, 0, 1920, 720)
-next_level = "res://src/ui/main_menu.tscn"
+next_level = "res://src/levels/level_04.tscn"
 
 [node name="Geometry" type="Node2D" parent="."]
 

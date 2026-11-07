@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var _level_name: Label = %LevelName
 @onready var _timer: Label = %TimerLabel
 @onready var _deaths: Label = %DeathsLabel
+@onready var _crystals: Label = %CrystalsLabel
 @onready var _indicator: GravityIndicator = %GravityIndicator
 @onready var _complete_panel: Control = %CompletePanel
 @onready var _stats: Label = %StatsLabel
@@ -17,6 +18,7 @@ func bind(level: Level) -> void:
 	_complete_panel.visible = false
 	level.timer_updated.connect(_on_timer_updated)
 	level.deaths_changed.connect(_on_deaths_changed)
+	level.crystals_changed.connect(_on_crystals_changed)
 	level.gravity_changed.connect(_on_gravity_changed)
 	level.air_charges_changed.connect(_indicator.set_charges)
 	level.flip_denied.connect(_indicator.flash_denied)
@@ -35,6 +37,15 @@ func _on_timer_updated(seconds: float) -> void:
 
 func _on_deaths_changed(count: int) -> void:
 	_deaths.text = "Deaths: %d" % count
+
+
+func _on_crystals_changed(collected: int, total: int, required: bool) -> void:
+	if total <= 0:
+		_crystals.visible = false
+		return
+	_crystals.visible = true
+	var suffix := " (UNLOCKED!)" if (required and collected >= total) else (" (Required to unlock Exit)" if required else "")
+	_crystals.text = "◆ Rhombuses: %d / %d%s" % [collected, total, suffix]
 
 
 func _on_gravity_changed(dir: int) -> void:

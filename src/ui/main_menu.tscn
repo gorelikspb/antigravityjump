@@ -30,64 +30,78 @@ grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="HeaderBox" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="Title" type="Label" parent="CenterContainer/VBoxContainer/HeaderBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.32, 0.75, 1, 1)
-theme_override_font_sizes/font_size = 56
+theme_override_font_sizes/font_size = 52
 text = "ANTI-GRAVITY JUMP"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="CenterContainer/VBoxContainer/HeaderBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "4-Way Gravity Indie Platformer"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
 [node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
+
+[node name="BtnLevel0" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "[0] Tutorial - Basics & Rhombus Lock  ([0])"
 
 [node name="BtnLevel1" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 50)
+custom_minimum_size = Vector2(380, 46)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Level 01 - First Flip  ([1] / [Enter])"
+theme_override_font_sizes/font_size = 16
+text = "[1] Level 01 - First Flip (3 ◆)  ([1] / [Enter])"
 
 [node name="BtnLevel2" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 50)
+custom_minimum_size = Vector2(380, 46)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Level 02 - Double Shift  ([2])"
+theme_override_font_sizes/font_size = 16
+text = "[2] Level 02 - Double Shift (2 ◆)  ([2])"
 
 [node name="BtnLevel3" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 50)
+custom_minimum_size = Vector2(380, 46)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Level 03 - Moving Grounds  ([3])"
+theme_override_font_sizes/font_size = 16
+text = "[3] Level 03 - Moving Grounds (2 ◆)  ([3])"
+
+[node name="BtnLevel4" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "[4] Level 04 - The Gauntlet (4 ◆)  ([4])"
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/MenuButtons"]
 layout_mode = 2
 
 [node name="BtnQuit" type="Button" parent="CenterContainer/VBoxContainer/MenuButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 44)
+custom_minimum_size = Vector2(380, 42)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.4, 0.4, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 15
 text = "Quit Game"

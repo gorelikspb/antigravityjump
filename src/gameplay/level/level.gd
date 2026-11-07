@@ -11,11 +11,14 @@ signal gravity_changed(dir: int)
 signal air_charges_changed(charges: int, max_charges: int)
 signal flip_denied
 signal checkpoint_reached
+signal crystals_changed(collected: int, total: int, required: bool)
 
 @export var level_name: String = "Untitled Level"
 @export var level_bounds: Rect2 = Rect2(0, 0, 1280, 720)
 @export var start_gravity: GravityMath.Dir = GravityMath.Dir.DOWN
 @export_file("*.tscn") var next_level: String = ""
+## If true, the Goal stays locked until every RechargeCrystal in the level has been collected.
+@export var require_all_crystals: bool = true
 ## Extra distance outside level_bounds before the player is killed (AC-L5).
 @export var out_of_bounds_margin: float = 64.0
 
@@ -26,6 +29,9 @@ var _completed: bool = false
 var _respawn_position: Vector2
 var _respawn_gravity: int
 var _respawn_timer: Timer
+var _total_crystals: int = 0
+var _collected_crystals: Array[RechargeCrystal] = []
+var _checkpoint_crystals: Array[RechargeCrystal] = []
 
 @onready var _player: Player = $Player
 @onready var _spawn: Marker2D = $Spawn
@@ -56,10 +62,18 @@ func _ready() -> void:
 	for node in get_tree().get_nodes_in_group(&"goals"):
 		if is_ancestor_of(node):
 			(node as Goal).reached.connect(_on_goal_reached)
+	for node in get_tree().get_nodes_in_group(&"crystals"):
+		if is_ancestor_of(node):
+			var c := node as RechargeCrystal
+			_total_crystals += 1
+			c.always_consume = true
+			c.collected.connect(_on_crystal_collected.bind(c))
 
 	_player.respawn(_respawn_position, _respawn_gravity)
+	_update_goal_lock()
 	deaths_changed.emit(_deaths)
 	timer_updated.emit(_elapsed)
+	crystals_changed.emit(_collected_crystals.size(), _total_crystals, require_all_crystals)
 
 
 func _physics_process(delta: float) -> void:
@@ -104,22 +118,48 @@ func _on_player_died() -> void:
 func _do_respawn() -> void:
 	if _completed:
 		return
+	_collected_crystals = _checkpoint_crystals.duplicate()
 	for node in get_tree().get_nodes_in_group(&"crystals"):
 		if is_ancestor_of(node):
 			node.call(&"reset")
+	_update_goal_lock()
+	crystals_changed.emit(_collected_crystals.size(), _total_crystals, require_all_crystals)
 	_player.respawn(_respawn_position, _respawn_gravity)
 
 
 func _on_checkpoint_activated(respawn_position: Vector2) -> void:
 	_respawn_position = respawn_position
 	_respawn_gravity = _player.gravity_dir
+	_checkpoint_crystals = _collected_crystals.duplicate()
 	if has_node("/root/SoundManager"):
 		get_node("/root/SoundManager").play(AudioSynthesizer.Sound.CHECKPOINT)
 	checkpoint_reached.emit()
 
 
+func _on_crystal_collected(crystal: RechargeCrystal) -> void:
+	if not _collected_crystals.has(crystal):
+		_collected_crystals.append(crystal)
+		_update_goal_lock()
+		crystals_changed.emit(_collected_crystals.size(), _total_crystals, require_all_crystals)
+
+
+func _is_goal_locked() -> bool:
+	return require_all_crystals and _total_crystals > 0 and _collected_crystals.size() < _total_crystals
+
+
+func _update_goal_lock() -> void:
+	var locked := _is_goal_locked()
+	for node in get_tree().get_nodes_in_group(&"goals"):
+		if is_ancestor_of(node):
+			(node as Goal).is_locked = locked
+
+
 func _on_goal_reached() -> void:
 	if _completed or _player.is_dead():
+		return
+	if _is_goal_locked():
+		if has_node("/root/SoundManager"):
+			get_node("/root/SoundManager").play(AudioSynthesizer.Sound.DENY)
 		return
 	_completed = true
 	_running = false

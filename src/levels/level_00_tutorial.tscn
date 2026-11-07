@@ -1,0 +1,130 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/level/level.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://src/gameplay/level/block.gd" id="4_block"]
+[ext_resource type="Script" path="res://src/gameplay/level/spikes.gd" id="5_spikes"]
+[ext_resource type="Script" path="res://src/gameplay/level/gravity_zone.gd" id="6_zone"]
+[ext_resource type="Script" path="res://src/gameplay/level/checkpoint.gd" id="7_checkpoint"]
+[ext_resource type="Script" path="res://src/gameplay/level/goal.gd" id="8_goal"]
+[ext_resource type="Script" path="res://src/gameplay/level/recharge_crystal.gd" id="9_crystal"]
+
+[node name="Level00Tutorial" type="Node2D"]
+script = ExtResource("1_level")
+level_name = "Level 00 - Interactive Tutorial"
+level_bounds = Rect2(0, 0, 1920, 720)
+next_level = "res://src/levels/level_01.tscn"
+
+[node name="Geometry" type="Node2D" parent="."]
+
+[node name="Ceiling" type="StaticBody2D" parent="Geometry"]
+script = ExtResource("4_block")
+size = Vector2(1920, 80)
+
+[node name="FloorRoom1" type="StaticBody2D" parent="Geometry"]
+position = Vector2(0, 640)
+script = ExtResource("4_block")
+size = Vector2(480, 80)
+
+[node name="Step1" type="StaticBody2D" parent="Geometry"]
+position = Vector2(320, 560)
+script = ExtResource("4_block")
+size = Vector2(80, 80)
+
+[node name="FloorRoom2" type="StaticBody2D" parent="Geometry"]
+position = Vector2(960, 640)
+script = ExtResource("4_block")
+size = Vector2(480, 80)
+
+[node name="FloorRoom3" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1440, 640)
+script = ExtResource("4_block")
+size = Vector2(480, 80)
+
+[node name="GoalLedge" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1680, 620)
+script = ExtResource("4_block")
+size = Vector2(240, 20)
+
+[node name="Hazards" type="Node2D" parent="."]
+
+[node name="PitSpikes" type="Area2D" parent="Hazards"]
+position = Vector2(480, 688)
+script = ExtResource("5_spikes")
+size = Vector2(480, 32)
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="Crystal1" type="Area2D" parent="Pickups"]
+position = Vector2(1180, 440)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
+
+[node name="Crystal2" type="Area2D" parent="Pickups"]
+position = Vector2(1560, 260)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="Checkpoint1" type="Area2D" parent="Triggers"]
+position = Vector2(928, 80)
+script = ExtResource("7_checkpoint")
+size = Vector2(32, 560)
+
+[node name="Goal" type="Area2D" parent="Triggers"]
+position = Vector2(1760, 580)
+script = ExtResource("8_goal")
+size = Vector2(40, 40)
+
+[node name="TutorialLabels" type="Node2D" parent="."]
+
+[node name="Label1" type="Label" parent="TutorialLabels"]
+offset_left = 60.0
+offset_top = 450.0
+offset_right = 420.0
+offset_bottom = 510.0
+theme_override_colors/font_color = Color(0.9, 0.9, 1, 0.9)
+theme_override_font_sizes/font_size = 18
+text = "1. Move (A/D) & Jump (Space)"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="TutorialLabels"]
+offset_left = 520.0
+offset_top = 450.0
+offset_right = 920.0
+offset_bottom = 510.0
+theme_override_colors/font_color = Color(0.9, 0.9, 1, 0.9)
+theme_override_font_sizes/font_size = 18
+text = "2. Flip Gravity UP (↑) on ground, then DOWN (↓) after pit!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Label3" type="Label" parent="TutorialLabels"]
+offset_left = 980.0
+offset_top = 280.0
+offset_right = 1420.0
+offset_bottom = 360.0
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+text = "3. EXIT IS LOCKED! Collect ALL Rhombus Crystals (◆) to unlock Exit & refill flips!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Label4" type="Label" parent="TutorialLabels"]
+offset_left = 1460.0
+offset_top = 180.0
+offset_right = 1880.0
+offset_bottom = 240.0
+theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "Grab Crystal near ceiling, then enter golden Exit!"
+horizontal_alignment = 1
+
+[node name="PlayerInstance" parent="." instance=ExtResource("2_player")]
+position = Vector2(120, 580)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
