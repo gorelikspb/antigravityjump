@@ -1,0 +1,112 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/level/level.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://src/gameplay/level/block.gd" id="4_block"]
+[ext_resource type="Script" path="res://src/gameplay/level/spikes.gd" id="5_spikes"]
+[ext_resource type="Script" path="res://src/gameplay/level/gravity_zone.gd" id="6_zone"]
+[ext_resource type="Script" path="res://src/gameplay/level/checkpoint.gd" id="7_checkpoint"]
+[ext_resource type="Script" path="res://src/gameplay/level/goal.gd" id="8_goal"]
+[ext_resource type="Script" path="res://src/gameplay/level/recharge_crystal.gd" id="9_crystal"]
+[ext_resource type="Script" path="res://src/gameplay/level/moving_platform.gd" id="10_moving_platform"]
+
+[node name="Level03" type="Node2D"]
+script = ExtResource("1_level")
+level_name = "Level 03 - Moving Grounds"
+level_bounds = Rect2(0, 0, 1920, 720)
+next_level = "res://src/ui/main_menu.tscn"
+
+[node name="Geometry" type="Node2D" parent="."]
+
+[node name="Ceiling" type="StaticBody2D" parent="Geometry"]
+script = ExtResource("4_block")
+size = Vector2(1920, 80)
+
+[node name="LeftWall" type="StaticBody2D" parent="Geometry"]
+position = Vector2(0, 80)
+script = ExtResource("4_block")
+size = Vector2(32, 560)
+
+[node name="RightWall" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1856, 80)
+script = ExtResource("4_block")
+size = Vector2(64, 640)
+
+[node name="FloorStart" type="StaticBody2D" parent="Geometry"]
+position = Vector2(0, 640)
+script = ExtResource("4_block")
+size = Vector2(320, 80)
+
+[node name="SafeMidFloor" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1280, 640)
+script = ExtResource("4_block")
+size = Vector2(576, 80)
+
+[node name="FinalGoalLedge" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1680, 260)
+script = ExtResource("4_block")
+size = Vector2(176, 32)
+
+[node name="MovingPlatforms" type="Node2D" parent="."]
+
+[node name="MovingPlatform1" type="AnimatableBody2D" parent="MovingPlatforms"]
+position = Vector2(360, 560)
+script = ExtResource("10_moving_platform")
+size = Vector2(144, 24)
+travel_offset = Vector2(280, 0)
+duration = 2.5
+
+[node name="MovingPlatform2" type="AnimatableBody2D" parent="MovingPlatforms"]
+position = Vector2(860, 180)
+script = ExtResource("10_moving_platform")
+size = Vector2(144, 24)
+travel_offset = Vector2(280, 0)
+duration = 2.5
+
+[node name="Hazards" type="Node2D" parent="."]
+
+[node name="PitSpikes" type="Area2D" parent="Hazards"]
+position = Vector2(320, 688)
+script = ExtResource("5_spikes")
+size = Vector2(960, 32)
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="RechargeCrystalMid" type="Area2D" parent="Pickups"]
+position = Vector2(780, 340)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
+
+[node name="RechargeCrystalGoal" type="Area2D" parent="Pickups"]
+position = Vector2(1560, 400)
+script = ExtResource("9_crystal")
+always_consume = true
+size = Vector2(32, 32)
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="SafetyZoneDown" type="Area2D" parent="Triggers"]
+position = Vector2(1280, 160)
+script = ExtResource("6_zone")
+direction = 0
+size = Vector2(80, 480)
+
+[node name="Checkpoint1" type="Area2D" parent="Triggers"]
+position = Vector2(1380, 80)
+script = ExtResource("7_checkpoint")
+size = Vector2(32, 560)
+
+[node name="Goal" type="Area2D" parent="Triggers"]
+position = Vector2(1760, 200)
+script = ExtResource("8_goal")
+size = Vector2(40, 56)
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(100, 628)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(100, 628)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]

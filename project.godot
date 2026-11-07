@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Anti-Gravity Jump"
 config/description="2D platformer with 4-way gravity flipping (prototype)."
-run/main_scene="res://src/levels/level_01.tscn"
+run/main_scene="res://src/ui/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]

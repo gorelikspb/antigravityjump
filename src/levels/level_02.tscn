@@ -14,6 +14,7 @@
 script = ExtResource("1_level")
 level_name = "Level 02 - Double Shift"
 level_bounds = Rect2(0, 0, 1920, 720)
+next_level = "res://src/levels/level_03.tscn"
 
 [node name="Geometry" type="Node2D" parent="."]
 

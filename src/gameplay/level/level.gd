@@ -72,7 +72,9 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"restart"):
+	if event.is_action_pressed(&"menu"):
+		get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+	elif event.is_action_pressed(&"restart"):
 		get_tree().reload_current_scene()
 	elif _completed and event.is_action_pressed(&"confirm"):
 		if next_level.is_empty():

@@ -17,6 +17,7 @@ const KEYS: Dictionary = {
 	&"gravity_right": [KEY_RIGHT],
 	&"restart": [KEY_R],
 	&"confirm": [KEY_ENTER, KEY_KP_ENTER],
+	&"menu": [KEY_ESCAPE],
 }
 
 const JOY_BUTTONS: Dictionary = {
