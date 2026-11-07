@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How 4-Way Gravity Platformer Physics Works in Godot 4 - Anti-Gravity Jump</title>
+  <meta name="description" content="Technical breakdown of 4-direction gravity switching in Godot 4 using CharacterBody2D, dynamic up_direction, and screen-relative tangent controls.">
+  <link rel="canonical" href="https://antigravityjump.pages.dev/notes/gravity-platformer-mechanics.html">
+  <style>
+    body { margin: 0; padding: 2.5rem 1.5rem; font-family: system-ui, sans-serif; background: #0b0d14; color: #e8ecf4; line-height: 1.65; }
+    main { max-width: 42rem; margin: 0 auto; }
+    a { color: #4fdbff; text-decoration: none; }
+    h1, h2 { color: #4fdbff; }
+    code, pre { background: #131722; padding: 0.2rem 0.4rem; border-radius: 5px; font-family: monospace; }
+    pre { padding: 1rem; overflow-x: auto; border: 1px solid #242c40; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="/notes/">← All Notes</a> · <a href="/">Play Anti-Gravity Jump</a></p>
+    <h1>How 4-Way Gravity Platformer Physics Works in Godot 4</h1>
+    <p>In classic gravity-flip platformers like <em>VVVVVV</em> or <em>Celeste</em> mods, responsive control comes from deterministic velocity decomposition rather than physics-engine forces.</p>
+    <h2>1. Tangent and Normal Velocity Split</h2>
+    <p>Every physics frame, the player's world velocity is projected onto two axes: the <strong>gravity normal</strong> (falling/jumping) and the <strong>screen-relative tangent</strong> (running). When you stand on the ceiling, pressing <kbd>D</kbd> still moves you right on screen—preventing control inversion sickness.</p>
+    <h2>2. Anti-Catapult Momentum Cap</h2>
+    <p>Flipping gravity in mid-air preserves your world momentum, but caps speed directed against the new gravity vector to <code>240 px/s</code> so you can weave through spike corridors cleanly.</p>
+    <p><a href="/"><strong>👉 Play Anti-Gravity Jump in your browser</strong></a></p>
+  </main>
+</body>
+</html>

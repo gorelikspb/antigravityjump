@@ -1,0 +1,10 @@
+{
+  "name": "antigravityjump",
+  "private": true,
+  "scripts": {
+    "deploy": "npx wrangler@4.109.0 pages deploy public --project-name=antigravityjump --commit-dirty=true"
+  },
+  "devDependencies": {
+    "wrangler": "4.109.0"
+  }
+}

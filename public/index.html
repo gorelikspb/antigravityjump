@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anti-Gravity Jump - Free 4-Way Gravity Puzzle Platformer Game Online</title>
+  <meta name="description" content="Play Anti-Gravity Jump free in your browser! Flip gravity in 4 directions (Up, Down, Left, Right), collect all Rhombus Crystals in mid-air to unlock the exit, and beat the speedrun timer.">
+  <link rel="canonical" href="https://antigravityjump.pages.dev/">
+  <meta property="og:title" content="Anti-Gravity Jump - 4-Way Gravity Puzzle Platformer (Play Free Online)">
+  <meta property="og:description" content="Every wall is a floor. Flip gravity in 4 directions, collect all Rhombus Crystals (◆) to unlock the exit, and master 5 neon stages right in your browser.">
+  <meta property="og:url" content="https://antigravityjump.pages.dev/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://antigravityjump.pages.dev/game/index.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="google-site-verification" content="FjUZ6hoHjNAZ783fB-eBOua9Up64i7T4vHaloHMWYVY">
+  <link rel="icon" type="image/png" href="/game/index.icon.png">
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Anti-Gravity Jump",
+      "url": "https://antigravityjump.pages.dev/",
+      "applicationCategory": "Game",
+      "gamePlatform": ["Web Browser", "Windows"],
+      "operatingSystem": "Any (WebAssembly / HTML5)",
+      "genre": ["Puzzle Platformer", "Indie Game", "Speedrun"],
+      "inLanguage": ["en", "ru"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "description": "Fast-paced 2D puzzle-platformer built with Godot 4 where you flip gravity in 4 cardinal directions and collect Rhombus Crystals to unlock each room's exit."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do you unlock the exit door in Anti-Gravity Jump?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The exit Goal starts locked with a red X. You must collect every cyan Rhombus Crystal (◆) in the stage to unlock the exit. Touching a crystal in mid-air also immediately refills your air-flip charge."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I play Anti-Gravity Jump with a controller or keyboard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Move with WASD or the Left Stick, jump with Space or Gamepad A, and flip gravity in 4 directions using the Arrow Keys (Up, Down, Left, Right) or D-Pad."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+  <style>
+    :root {
+      --bg: #0b0d14;
+      --card: #131722;
+      --border: #242c40;
+      --cyan: #4fdbff;
+      --gold: #ffd14d;
+      --text: #e8ecf4;
+      --muted: #9aa5b8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: var(--cyan);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      transition: transform 0.12s, border-color 0.12s;
+    }
+    .btn:hover { border-color: var(--cyan); transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--cyan);
+      color: #061018;
+      border-color: var(--cyan);
+    }
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    .game-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(79, 219, 255, 0.12);
+    }
+    .game-shell iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+    .controls-bar {
+      margin-top: 1rem;
+      padding: 0.9rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.92rem;
+    }
+    kbd {
+      background: #1d2436;
+      border: 1px solid #35415f;
+      border-radius: 5px;
+      padding: 0.15rem 0.45rem;
+      font-family: monospace;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.35rem;
+    }
+    .card h2, .card h3 {
+      margin-top: 0;
+      color: var(--cyan);
+      font-size: 1.15rem;
+    }
+    .faq {
+      margin-top: 2.5rem;
+    }
+    details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    summary {
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--gold);
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    footer a { color: var(--cyan); text-decoration: none; margin: 0 0.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">◆ ANTI-GRAVITY JUMP</a>
+    <div class="nav-actions">
+      <button class="btn btn-primary" onclick="const f=document.getElementById('game-frame'); f.requestFullscreen ? f.requestFullscreen() : window.open('/game/','_blank'); f.focus();">⛶ Fullscreen Mode</button>
+      <a class="btn" href="https://github.com/gorelikspb/antigravityjump/releases" target="_blank" rel="noopener">⬇ Download Windows .EXE</a>
+      <a class="btn" href="/notes/">Dev Notes & Guides</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="game-shell">
+      <iframe id="game-frame" src="/game/index.html" title="Anti-Gravity Jump WebAssembly Game" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe>
+    </div>
+
+    <div class="controls-bar">
+      <div>
+        <strong>Controls:</strong>
+        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move &nbsp;·&nbsp;
+        <kbd>Space</kbd> Jump &nbsp;·&nbsp;
+        <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Flip Gravity &nbsp;·&nbsp;
+        <kbd>R</kbd> Quick Restart &nbsp;·&nbsp;
+        <kbd>Esc</kbd> Level Select
+      </div>
+      <div style="color: var(--gold); font-weight: 600;">
+        ◆ Collect all Rhombus Crystals in each room to unlock the Exit!
+      </div>
+    </div>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Every Wall Is a Floor</h2>
+        <p>Flip your personal gravity vector in any of the 4 cardinal directions (Down, Up, Left, Right). Run across ceilings to clear spike pits or turn vertical shafts into walkways.</p>
+      </article>
+      <article class="card">
+        <h2>Tactical Rhombus Lock (◆)</h2>
+        <p>Rushing to the end isn't enough. Every stage exit starts locked with a crimson barrier. Grab every floating cyan Rhombus Crystal to unlock the Goal while refilling your mid-air flip charge.</p>
+      </article>
+      <article class="card">
+        <h2>Ghost Trajectory & Zero-Lag Audio</h2>
+        <p>A live raycast Ghost Line shows your exact landing spot before you commit to a flip, backed by procedural 8-bit synthesizer audio and sub-second checkpoint respawns.</p>
+      </article>
+    </section>
+
+    <section class="faq">
+      <h2>Frequently Asked Questions</h2>
+      <details open>
+        <summary>How do I unlock the exit door?</summary>
+        <p>The exit Goal stays locked (marked with a red X) until you collect every cyan Rhombus Crystal (◆) in the room. Check the top-left HUD counter to see how many crystals remain.</p>
+      </details>
+      <details>
+        <summary>How do mid-air gravity flips work?</summary>
+        <p>Flipping gravity while standing on a surface is free and unlimited. In mid-air, you have 1 air-flip charge (shown as a golden dot below your gravity compass). Landing on any surface or touching a Rhombus Crystal immediately refills your charge.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    Built with Godot 4.7 ·
+    <a href="/notes/">Game Design & Speedrun Notes</a> ·
+    <a href="/notes/gravity-platformer-mechanics.html">How 4-Way Gravity Works</a> ·
+    <a href="/notes/rhombus-crystal-routing-guide.html">Rhombus Routing Guide</a> ·
+    <a href="https://github.com/gorelikspb/antigravityjump" target="_blank" rel="noopener">GitHub Repository</a>
+  </footer>
+</body>
+</html>
