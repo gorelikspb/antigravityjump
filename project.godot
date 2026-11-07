@@ -14,6 +14,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 
 InputBootstrap="*res://src/core/input_bootstrap.gd"
 SoundManager="*res://src/core/sound_manager.gd"
+SaveManager="*res://src/core/save_manager.gd"
 
 [display]
 

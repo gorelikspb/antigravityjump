@@ -1,8 +1,8 @@
 # Godot
 .godot/
 *.import
-export_presets.cfg
 /builds/
+run.log
 
 # Studio
 production/session-state/

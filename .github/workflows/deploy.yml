@@ -1,0 +1,49 @@
+name: Build & Deploy Web + Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot 4.7.2 & Export Templates
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          wget -q https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz
+          unzip -q Godot_v4.7.2-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          mkdir -p ~/.local/share/godot/export_templates/4.7.2.stable
+          unzip -q Godot_v4.7.2-stable_export_templates.tpz
+          mv templates/* ~/.local/share/godot/export_templates/4.7.2.stable/
+
+      - name: Export Web (HTML5) & Windows (.exe)
+        run: |
+          mkdir -p builds/web builds/windows
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --import
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --export-release "Web" builds/web/index.html
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --export-release "Windows Desktop" builds/windows/AntiGravityJump.exe
+          cd builds/windows && zip -r ../AntiGravityJump-Windows.zip .
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: builds/web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

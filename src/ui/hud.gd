@@ -53,6 +53,7 @@ func _on_gravity_changed(dir: int) -> void:
 
 
 func _on_level_completed(seconds: float, deaths: int, has_next: bool) -> void:
-	_stats.text = "Time  %s\nDeaths  %d" % [format_time(seconds), deaths]
-	_prompt.text = ("[Enter] Next level" if has_next else "[Enter] Play again") + "   ·   [R] Restart"
+	var medal := "★ GOLD" if (deaths == 0 and seconds <= 25.0) else ("◆ SILVER" if seconds <= 45.0 else "● BRONZE")
+	_stats.text = "Rank  %s\nTime  %s\nDeaths  %d" % [medal, format_time(seconds), deaths]
+	_prompt.text = ("[Enter] Next level" if has_next else "[Enter] Main Menu") + "   ·   [R] Restart   ·   [Esc] Menu"
 	_complete_panel.visible = true

@@ -39,6 +39,7 @@ var _checkpoint_crystals: Array[RechargeCrystal] = []
 
 
 func _ready() -> void:
+	_setup_neon_backdrop()
 	_respawn_position = _spawn.global_position
 	_respawn_gravity = start_gravity
 
@@ -164,6 +165,20 @@ func _on_goal_reached() -> void:
 	_completed = true
 	_running = false
 	_player.freeze(true)
+	if has_node("/root/SaveManager"):
+		get_node("/root/SaveManager").call(&"record_completion", scene_file_path.get_file().get_basename(), _elapsed, _deaths)
 	if has_node("/root/SoundManager"):
 		get_node("/root/SoundManager").play(AudioSynthesizer.Sound.GOAL)
 	level_completed.emit(_elapsed, _deaths)
+
+
+func _setup_neon_backdrop() -> void:
+	var env := Environment.new()
+	env.background_mode = Environment.BG_CANVAS
+	env.glow_enabled = true
+	env.glow_intensity = 0.65
+	env.glow_bloom = 0.18
+	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_SCREEN
+	var we := WorldEnvironment.new()
+	we.environment = env
+	add_child(we)
