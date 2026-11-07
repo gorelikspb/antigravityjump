@@ -271,5 +271,22 @@
     <a href="/notes/rhombus-crystal-routing-guide.html">Rhombus Routing Guide</a> ·
     <a href="https://github.com/gorelikspb/antigravityjump" target="_blank" rel="noopener">GitHub Repository</a>
   </footer>
+  <script src="/js/clarity.js" defer></script>
+  <script>
+    (function () {
+      try {
+        if (sessionStorage.getItem("agj_pulse_sent")) return;
+        sessionStorage.setItem("agj_pulse_sent", "1");
+        fetch("/api/pulse", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event: "game_start",
+            referrer: document.referrer || "direct"
+          })
+        }).catch(function () {});
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>

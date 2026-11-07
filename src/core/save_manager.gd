@@ -20,6 +20,9 @@ func record_completion(level_id: String, time_sec: float, deaths: int) -> bool:
 	if deaths < prev_deaths:
 		_cfg.set_value(level_id, "best_deaths", deaths)
 	_cfg.save(SAVE_PATH)
+	if OS.has_feature("web"):
+		var js := "fetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'level_complete',level:'%s (%.2fs, %d deaths)'})}).catch(()=>{});" % [level_id, time_sec, deaths]
+		JavaScriptBridge.eval(js)
 	return is_new_record
 
 
