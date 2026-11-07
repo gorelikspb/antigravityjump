@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="PlayerConfig" format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/player/player_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+move_speed = 230.0
+ground_accel = 2200.0
+ground_decel = 2600.0
+air_accel = 1500.0
+air_decel = 900.0
+jump_velocity = 480.0
+jump_cut_multiplier = 0.45
+coyote_time = 0.1
+jump_buffer_time = 0.12
+gravity_strength = 1400.0
+max_fall_speed = 720.0
+air_flip_charges = 1
+flip_carry_limit = 240.0
+rotate_visual_speed = 18.0
+camera_follows_gravity = false
+respawn_delay = 0.35

@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/player/player.gd" id="1_player"]
+[ext_resource type="Resource" path="res://assets/data/player_config.tres" id="2_config"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(22, 22)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+floor_snap_length = 4.0
+script = ExtResource("1_player")
+config = ExtResource("2_config")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.31, 0.86, 1, 1)
+polygon = PackedVector2Array(-11, -11, 11, -11, 11, 11, -11, 11)
+
+[node name="Feet" type="Polygon2D" parent="Visual"]
+color = Color(0.1, 0.42, 0.62, 1)
+polygon = PackedVector2Array(-11, 6, 11, 6, 11, 11, -11, 11)
+
+[node name="Eye" type="Polygon2D" parent="Visual"]
+color = Color(1, 1, 1, 1)
+polygon = PackedVector2Array(2, -6, 7, -6, 7, 1, 2, 1)
+
+[node name="DeathBurst" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 24
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 80.0
+initial_velocity_max = 220.0
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+color = Color(0.31, 0.86, 1, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

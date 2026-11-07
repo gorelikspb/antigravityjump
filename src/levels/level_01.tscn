@@ -1,0 +1,122 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/level/level.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://src/gameplay/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://src/gameplay/level/block.gd" id="4_block"]
+[ext_resource type="Script" path="res://src/gameplay/level/spikes.gd" id="5_spikes"]
+[ext_resource type="Script" path="res://src/gameplay/level/gravity_zone.gd" id="6_zone"]
+[ext_resource type="Script" path="res://src/gameplay/level/checkpoint.gd" id="7_checkpoint"]
+[ext_resource type="Script" path="res://src/gameplay/level/goal.gd" id="8_goal"]
+
+[node name="Level01" type="Node2D"]
+script = ExtResource("1_level")
+level_name = "Level 01 - First Flip"
+level_bounds = Rect2(0, 0, 2064, 720)
+
+[node name="Geometry" type="Node2D" parent="."]
+
+[node name="Ceiling" type="StaticBody2D" parent="Geometry"]
+script = ExtResource("4_block")
+size = Vector2(2064, 80)
+
+[node name="FloorStart" type="StaticBody2D" parent="Geometry"]
+position = Vector2(0, 640)
+script = ExtResource("4_block")
+size = Vector2(800, 80)
+
+[node name="Step" type="StaticBody2D" parent="Geometry"]
+position = Vector2(400, 576)
+script = ExtResource("4_block")
+size = Vector2(80, 64)
+
+[node name="FloorEnd" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1120, 640)
+script = ExtResource("4_block")
+size = Vector2(944, 80)
+
+[node name="ChamberLeftWall" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1600, 80)
+script = ExtResource("4_block")
+size = Vector2(64, 496)
+
+[node name="Ledge" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1760, 240)
+script = ExtResource("4_block")
+size = Vector2(240, 32)
+
+[node name="RightWall" type="StaticBody2D" parent="Geometry"]
+position = Vector2(2000, 80)
+script = ExtResource("4_block")
+size = Vector2(64, 560)
+
+[node name="Hazards" type="Node2D" parent="."]
+
+[node name="PitSpikes" type="Area2D" parent="Hazards"]
+position = Vector2(800, 688)
+script = ExtResource("5_spikes")
+size = Vector2(320, 32)
+
+[node name="CeilingSpikes" type="Area2D" parent="Hazards"]
+position = Vector2(1700, 80)
+script = ExtResource("5_spikes")
+facing = 1
+size = Vector2(300, 24)
+
+[node name="Triggers" type="Node2D" parent="."]
+
+[node name="SafetyZoneDown" type="Area2D" parent="Triggers"]
+position = Vector2(1120, 80)
+script = ExtResource("6_zone")
+direction = 0
+size = Vector2(80, 560)
+
+[node name="Checkpoint1" type="Area2D" parent="Triggers"]
+position = Vector2(1244, 80)
+script = ExtResource("7_checkpoint")
+size = Vector2(32, 560)
+
+[node name="Goal" type="Area2D" parent="Triggers"]
+position = Vector2(1880, 180)
+script = ExtResource("8_goal")
+size = Vector2(40, 56)
+
+[node name="Tutorial" type="Node2D" parent="."]
+
+[node name="HintMove" type="Label" parent="Tutorial"]
+offset_left = 180.0
+offset_top = 460.0
+offset_right = 560.0
+offset_bottom = 520.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+text = "Move: A / D      Jump: Space"
+horizontal_alignment = 1
+
+[node name="HintFlip" type="Label" parent="Tutorial"]
+offset_left = 560.0
+offset_top = 300.0
+offset_right = 1000.0
+offset_bottom = 360.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+text = "Too wide to jump...
+Press UP ARROW to flip gravity!"
+horizontal_alignment = 1
+
+[node name="HintChamber" type="Label" parent="Tutorial"]
+offset_left = 1260.0
+offset_top = 360.0
+offset_right = 1600.0
+offset_bottom = 440.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.5)
+text = "Walls are floors too.
+Jump, then flip LEFT in mid-air.
+(1 air flip, refills on landing)"
+horizontal_alignment = 1
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(100, 628)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(100, 628)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]

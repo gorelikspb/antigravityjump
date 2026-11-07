@@ -1,0 +1,100 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://src/ui/gravity_indicator.gd" id="2_indicator"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="TopLeft" type="VBoxContainer" parent="."]
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 424.0
+offset_bottom = 116.0
+
+[node name="LevelName" type="Label" parent="TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.6)
+text = "Level"
+
+[node name="TimerLabel" type="Label" parent="TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "00:00.00"
+
+[node name="DeathsLabel" type="Label" parent="TopLeft"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Deaths: 0"
+
+[node name="GravityIndicator" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = 112.0
+grow_horizontal = 0
+script = ExtResource("2_indicator")
+
+[node name="Hint" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -40.0
+offset_right = 480.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+text = "WASD / Stick: move   ·   Space / A: jump   ·   Arrows / D-pad: flip gravity   ·   R: restart"
+horizontal_alignment = 1
+
+[node name="CompletePanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -120.0
+offset_right = 240.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CompletePanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="CompletePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.3, 1)
+theme_override_font_sizes/font_size = 40
+text = "LEVEL COMPLETE"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="CompletePanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Time  00:00.00
+Deaths  0"
+horizontal_alignment = 1
+
+[node name="PromptLabel" type="Label" parent="CompletePanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.7)
+text = "[Enter] Play again   ·   [R] Restart"
+horizontal_alignment = 1

@@ -1,0 +1,14 @@
+# Godot
+.godot/
+*.import
+export_presets.cfg
+/builds/
+
+# Studio
+production/session-state/
+production/session-logs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/

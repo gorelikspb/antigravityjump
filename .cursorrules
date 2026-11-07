@@ -1,0 +1,13 @@
+You are working on "Anti-Gravity Jump", a Godot 4.7 GDScript 2D platformer with 4-way gravity flipping.
+Read CLAUDE.md for the full studio rules. Key points:
+
+- Code root: src/. Tuning data: assets/data/player_config.tres (PlayerConfig). Never hardcode gameplay numbers.
+- Gravity math lives in src/gameplay/gravity/gravity_math.gd (pure static). Player gravity is per-player (ADR-0001), not global physics gravity.
+- Velocity is split into tangent (run) and normal (fall/jump) components via GravityMath.split_velocity / compose_velocity.
+- Movement controls are SCREEN-relative (tangent_axis is fixed in screen space).
+- UI only listens to Level signals (HUD.bind(level)). Gameplay never references UI.
+- Greybox objects (Block, Spikes, GravityZone, Checkpoint, Goal) are @tool, position = top-left, `size` export.
+- Use typed GDScript, signals for cross-system events, delta time everywhere.
+- Every script header cites the GDD file it implements (design/gdd/*.md).
+- Before adding a system, add/extend its GDD (Core Rules, Formulas, Edge Cases, Tuning Knobs, Acceptance Criteria).
+- Run tools/run_qa.ps1 after changes; keep the Level 01 bot green.
