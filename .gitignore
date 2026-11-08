@@ -8,6 +8,19 @@ run.log
 production/session-state/
 production/session-logs/
 
+# Management & Assistant (per common/repo_rules.md)
+vision.md
+tasks.md
+PROJECT_LOG.md
+AGENTS.md
+ARCHITECTURE_INTERNAL.md
+.private-project
+
+# Secrets & Tooling caches
+.env
+.env.*
+.wrangler/
+
 # OS / IDE
 .DS_Store
 Thumbs.db
