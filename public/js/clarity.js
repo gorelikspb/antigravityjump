@@ -1,7 +1,6 @@
-// Microsoft Clarity placeholder — paste your personal Clarity project ID for antigravityjump.pages.dev below.
-// Per studio rule: never reuse another site's Clarity ID. Leave empty until created in https://clarity.microsoft.com/
+// Microsoft Clarity analytics for antigravityjump.pages.dev
 (function () {
-  var CLARITY_PROJECT_ID = "";
+  var CLARITY_PROJECT_ID = "za6gkt8834";
   if (!CLARITY_PROJECT_ID) return;
   (function (c, l, a, r, i, t, y) {
     c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
