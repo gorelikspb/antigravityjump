@@ -10,8 +10,13 @@
   <meta property="og:description" content="Every wall is a floor. Flip gravity in 4 directions, collect all Rhombus Crystals (◆) to unlock the exit, and master 5 neon stages right in your browser.">
   <meta property="og:url" content="https://antigravityjump.pages.dev/">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://antigravityjump.pages.dev/game/index.png">
+  <meta property="og:image" content="https://antigravityjump.pages.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://antigravityjump.pages.dev/og-image.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0d14">
   <meta name="google-site-verification" content="FjUZ6hoHjNAZ783fB-eBOua9Up64i7T4vHaloHMWYVY">
   <link rel="icon" type="image/png" href="/game/index.icon.png">
   <script type="application/ld+json">
@@ -236,6 +241,19 @@
       </div>
     </div>
 
+    <div class="share-box" style="margin-top: 1rem; padding: 1rem 1.25rem; background: linear-gradient(135deg, #131a29 0%, #162238 100%); border: 1px solid #2e4468; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+      <div>
+        <span style="color: var(--gold); font-weight: 700; font-size: 1.05rem;">⚡ Challenge a Friend</span>
+        <span style="color: var(--muted); margin-left: 0.5rem; font-size: 0.9rem;">Beat Level 04 with 0 deaths and share your run:</span>
+      </div>
+      <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+        <button id="copy-challenge-btn" class="btn" style="border-color: var(--gold); color: var(--gold);" onclick="copyChallengeLink()">📋 Copy Challenge Link</button>
+        <a id="share-tg" class="btn" style="border-color: #2ca5e0; color: #2ca5e0;" href="https://t.me/share/url?url=https%3A%2F%2Fantigravityjump.pages.dev%2F&text=%F0%9F%8E%AE%20Can%20you%20beat%20Level%2004%20in%20Anti-Gravity%20Jump%3F%204-way%20gravity%20puzzle%20platformer%20free%20in%20browser%3A" target="_blank" rel="noopener">✈ Telegram</a>
+        <a id="share-x" class="btn" style="border-color: #1da1f2; color: #1da1f2;" href="https://twitter.com/intent/tweet?text=%F0%9F%8E%AE%20Can%20you%20beat%20Level%2004%20in%20Anti-Gravity%20Jump%20with%200%20deaths%3F%20Free%204-way%20gravity%20puzzle%20platformer%20in%20your%20browser%3A&url=https%3A%2F%2Fantigravityjump.pages.dev%2F" target="_blank" rel="noopener">🐦 X (Twitter)</a>
+        <a id="share-reddit" class="btn" style="border-color: #ff4500; color: #ff4500;" href="https://www.reddit.com/submit?url=https%3A%2F%2Fantigravityjump.pages.dev%2F&title=Anti-Gravity%20Jump%20-%20Free%204-Way%20Gravity%20Puzzle%20Platformer%20(Godot%204%20WebAssembly)" target="_blank" rel="noopener">🔴 Reddit</a>
+      </div>
+    </div>
+
     <section class="grid">
       <article class="card">
         <h2>Every Wall Is a Floor</h2>
@@ -267,12 +285,29 @@
   <footer>
     Built with Godot 4.7 ·
     <a href="/notes/">Game Design & Speedrun Notes</a> ·
+    <a href="/notes/games-like-vvvvvv-and-celeste.html">Games Like VVVVVV & Celeste</a> ·
     <a href="/notes/gravity-platformer-mechanics.html">How 4-Way Gravity Works</a> ·
     <a href="/notes/rhombus-crystal-routing-guide.html">Rhombus Routing Guide</a> ·
     <a href="https://github.com/gorelikspb/antigravityjump" target="_blank" rel="noopener">GitHub Repository</a>
   </footer>
   <script src="/js/clarity.js" defer></script>
   <script>
+    function copyChallengeLink() {
+      const challengeText = "🎮 Can you beat Level 04 in Anti-Gravity Jump with 0 deaths? Fast 4-way gravity puzzle platformer running free in your browser: https://antigravityjump.pages.dev/?ref=challenge";
+      if (navigator.share) {
+        navigator.share({
+          title: "Anti-Gravity Jump Challenge",
+          text: challengeText,
+          url: "https://antigravityjump.pages.dev/?ref=challenge"
+        }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(challengeText).then(function () {
+          var btn = document.getElementById("copy-challenge-btn");
+          btn.textContent = "✓ Challenge Link Copied!";
+          setTimeout(function () { btn.textContent = "📋 Copy Challenge Link"; }, 2500);
+        });
+      }
+    }
     (function () {
       try {
         if (sessionStorage.getItem("agj_pulse_sent")) return;
