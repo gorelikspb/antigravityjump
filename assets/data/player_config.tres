@@ -17,6 +17,7 @@ gravity_strength = 1400.0
 max_fall_speed = 720.0
 air_flip_charges = 1
 flip_carry_limit = 240.0
+camera_zoom = Vector2(0.72, 0.72)
 rotate_visual_speed = 18.0
 camera_follows_gravity = false
 respawn_delay = 0.35

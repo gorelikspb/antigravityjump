@@ -49,13 +49,14 @@ collision_mask = 1
 exclude_parent = true
 
 [node name="GhostLine" type="Line2D" parent="."]
-width = 2.0
-default_color = Color(0.31, 0.86, 1, 0.25)
+width = 3.0
+default_color = Color(0.31, 0.86, 1, 0.55)
 
 [node name="GhostMarker" type="Polygon2D" parent="."]
-color = Color(0.31, 0.86, 1, 0.5)
+color = Color(0.31, 0.86, 1, 0.75)
 polygon = PackedVector2Array(-8, -2, 8, -2, 8, 2, -8, 2)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.72, 0.72)
 position_smoothing_enabled = true
-position_smoothing_speed = 8.0
+position_smoothing_speed = 7.0

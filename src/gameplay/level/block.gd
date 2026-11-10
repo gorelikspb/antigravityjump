@@ -38,4 +38,8 @@ func _refresh() -> void:
 func _draw() -> void:
 	var r := Rect2(Vector2.ZERO, size)
 	draw_rect(r, color)
-	draw_rect(r, color.lightened(0.3), false, 2.0)
+	# Bright neon cyan contour so all walls and floors stand out clearly
+	var border_color := Color(0.35, 0.78, 1.0, 0.9)
+	draw_rect(r, border_color, false, 3.0)
+	if size.x >= 16.0:
+		draw_line(Vector2(2, 2), Vector2(size.x - 2, 2), Color(0.85, 0.95, 1.0, 0.95), 2.0)

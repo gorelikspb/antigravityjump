@@ -24,6 +24,7 @@ extends Resource
 @export_range(0.0, 1200.0, 10.0, "suffix:px/s") var flip_carry_limit: float = 240.0
 
 @export_group("Presentation")
+@export var camera_zoom: Vector2 = Vector2(0.72, 0.72)
 @export_range(1.0, 60.0, 0.5, "suffix:rad/s") var rotate_visual_speed: float = 18.0
 @export var camera_follows_gravity: bool = false
 @export var show_ghost_ray: bool = true

@@ -44,6 +44,7 @@ func _ready() -> void:
 		config = PlayerConfig.new()
 	_air_charges = config.air_flip_charges
 	_camera.ignore_rotation = not config.camera_follows_gravity
+	_camera.zoom = config.camera_zoom if config else Vector2(0.72, 0.72)
 	_apply_gravity_dir(gravity_dir)
 	_visual.rotation = GravityMath.visual_rotation(gravity_dir)
 
@@ -180,10 +181,13 @@ func refill_air_charges() -> bool:
 
 
 func set_camera_limits(rect: Rect2) -> void:
-	_camera.limit_left = int(rect.position.x)
-	_camera.limit_top = int(rect.position.y)
-	_camera.limit_right = int(rect.end.x)
-	_camera.limit_bottom = int(rect.end.y)
+	# Generous margins so zoomed-out camera can frame entire room cleanly without cropping walls
+	var margin_x: int = 140
+	var margin_y: int = 160
+	_camera.limit_left = int(rect.position.x) - margin_x
+	_camera.limit_top = int(rect.position.y) - margin_y
+	_camera.limit_right = int(rect.end.x) + margin_x
+	_camera.limit_bottom = int(rect.end.y) + margin_y
 
 
 # --- Internals ---------------------------------------------------------------
