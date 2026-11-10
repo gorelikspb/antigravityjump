@@ -64,34 +64,9 @@ export async function onRequestPost(context) {
       statsMem.recentCountries = [country, ...statsMem.recentCountries].slice(0, 8);
     }
 
-    const BOT_TOKEN = context.env?.TELEGRAM_BOT_TOKEN;
-    const CHAT_ID = context.env?.TELEGRAM_CHAT_ID;
-
-    let tgSent = false;
-    // Notify in Telegram ONLY on actual gameplay milestones (e.g. level completion), not on every launch
-    if (BOT_TOKEN && CHAT_ID && body.notify !== false && event === "level_complete") {
-      const when = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Berlin" });
-      const loc = city ? `${country} (${city})` : country;
-      const title = `🏆 *Anti-Gravity Jump: пройден уровень!*`;
-      const details = level ? `\n📍 *Уровень:* ${level}` : "";
-      const text = `${title}${details}\n🌍 *Локация:* ${loc}\n🔗 *Источник:* ${ref}\n🕒 *Время:* ${when}`;
-
-      const tgRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text,
-          parse_mode: "Markdown",
-          disable_web_page_preview: true,
-        }),
-      });
-      const tgJson = await tgRes.json().catch(() => ({}));
-      tgSent = Boolean(tgJson.ok);
-    }
-
+    // Telegram notifications completely disabled per user preference.
     return new Response(
-      JSON.stringify({ ok: true, telegram: tgSent, country }),
+      JSON.stringify({ ok: true, country }),
       {
         status: 200,
         headers: { ...CORS, "Content-Type": "application/json" },
