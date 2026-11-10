@@ -10,7 +10,11 @@ extends CanvasLayer
 @onready var _indicator: GravityIndicator = %GravityIndicator
 @onready var _complete_panel: Control = %CompletePanel
 @onready var _stats: Label = %StatsLabel
-@onready var _prompt: Label = %PromptLabel
+@onready var _medal_label: Label = %MedalLabel
+@onready var _medal_reason: Label = %MedalReason
+@onready var _btn_next: Button = %BtnNext
+@onready var _btn_retry: Button = %BtnRetry
+@onready var _btn_menu: Button = %BtnMenu
 @onready var _idle_hint: Control = %IdleHint
 @onready var _idle_label: Label = %IdleLabel
 @onready var _scheme_toast: Label = %SchemeToast
@@ -27,6 +31,12 @@ func _ready() -> void:
 	if has_node("/root/InputBootstrap"):
 		var ib := get_node("/root/InputBootstrap")
 		ib.scheme_changed.connect(_on_scheme_changed)
+	if _btn_next:
+		_btn_next.pressed.connect(_on_next_pressed)
+	if _btn_retry:
+		_btn_retry.pressed.connect(_on_retry_pressed)
+	if _btn_menu:
+		_btn_menu.pressed.connect(_on_menu_pressed)
 
 
 func _process(delta: float) -> void:
@@ -133,8 +143,62 @@ func _on_gravity_changed(dir: int) -> void:
 	_indicator.direction = dir
 
 
+func _evaluate_medal(seconds: float, deaths: int) -> Dictionary:
+	var gold_time := 25.0
+	var silver_time := 45.0
+	
+	if deaths == 0 and seconds <= gold_time:
+		return {
+			"title": "🥇 ЗОЛОТАЯ МЕДАЛЬ (GOLD)",
+			"color": Color(1.0, 0.85, 0.2),
+			"reason": "Идеально: 0 смертей и время быстрее 25 с! (Ваш результат: %.1fs)" % seconds,
+		}
+	elif deaths <= 1 and seconds <= silver_time:
+		var why := ""
+		if deaths > 0:
+			why = "Серебро: допущена %d смерть. Для золота требуется 0 смертей и время < 25 с." % deaths
+		else:
+			why = "Серебро: время %.1fs. Для золота требуется быстрее 25 с при 0 смертей." % seconds
+		return {
+			"title": "🥈 СЕРЕБРЯНАЯ МЕДАЛЬ (SILVER)",
+			"color": Color(0.85, 0.88, 0.95),
+			"reason": why,
+		}
+	else:
+		var why := "Уровень пройден! Критерии золота: 0 смертей и время < 25 с (у вас %d смертей, время: %.1fs)." % [deaths, seconds]
+		return {
+			"title": "🥉 БРОНЗОВАЯ МЕДАЛЬ (BRONZE)",
+			"color": Color(0.95, 0.65, 0.35),
+			"reason": why,
+		}
+
+
 func _on_level_completed(seconds: float, deaths: int, has_next: bool) -> void:
-	var medal := "[GOLD MEDAL]" if (deaths == 0 and seconds <= 25.0) else ("[SILVER MEDAL]" if seconds <= 45.0 else "[BRONZE MEDAL]")
-	_stats.text = "Rank  %s\nTime  %s\nDeaths  %d" % [medal, format_time(seconds), deaths]
-	_prompt.text = ("[Enter] Next Level" if has_next else "[Enter] Main Menu") + "   ·   [R] Restart   ·   [Esc] Menu"
+	var medal_info := _evaluate_medal(seconds, deaths)
+	_medal_label.text = medal_info["title"]
+	_medal_label.set("theme_override_colors/font_color", medal_info["color"])
+	_medal_reason.text = medal_info["reason"]
+	_stats.text = "Время: %s   ·   Смертей: %d" % [format_time(seconds), deaths]
+
+	if has_next:
+		_btn_next.text = "► СЛЕДУЮЩИЙ УРОВЕНЬ  (Enter)"
+	else:
+		_btn_next.text = "► ГЛАВНОЕ МЕНЮ  (Enter)"
+
 	_complete_panel.visible = true
+	_btn_next.grab_focus()
+
+
+func _on_next_pressed() -> void:
+	if _level_ref and not _level_ref.next_level.is_empty():
+		get_tree().change_scene_to_file(_level_ref.next_level)
+	else:
+		get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+
+
+func _on_retry_pressed() -> void:
+	get_tree().reload_current_scene()
+
+
+func _on_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
