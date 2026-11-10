@@ -317,7 +317,8 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             event: "game_start",
-            referrer: document.referrer || "direct"
+            referrer: document.referrer || "direct",
+            notify: false
           })
         }).catch(function () {});
       } catch (e) {}

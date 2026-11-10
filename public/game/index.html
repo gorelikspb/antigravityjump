@@ -9,13 +9,16 @@ html, body, #canvas {
 	margin: 0;
 	padding: 0;
 	border: 0;
+	width: 100%;
+	height: 100%;
 }
 
 body {
-	color: white;
-	background-color: black;
+	color: #e8ecf4;
+	background-color: #0b0d14;
 	overflow: hidden;
 	touch-action: none;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 #canvas {
@@ -26,73 +29,156 @@ body {
 	outline: none;
 }
 
-#status, #status-splash, #status-progress {
+#status {
 	position: absolute;
+	top: 0;
 	left: 0;
 	right: 0;
-}
-
-#status, #status-splash {
-	top: 0;
 	bottom: 0;
-}
-
-#status {
-	background-color: #242424;
+	background: radial-gradient(circle at center, #131722 0%, #0b0d14 100%);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	visibility: visible;
+	z-index: 100;
+	opacity: 1;
+	transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+}
+
+#status.fade-out {
+	opacity: 0;
 	visibility: hidden;
+	pointer-events: none;
 }
 
-#status-splash {
-	max-height: 100%;
-	max-width: 100%;
-	margin: auto;
+.splash-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	max-width: 480px;
+	width: 88%;
+	padding: 1.5rem;
+	user-select: none;
 }
 
-#status-splash.show-image--false {
-	display: none;
+.rhombus-glow {
+	font-size: 3.2rem;
+	color: #4fdbff;
+	text-shadow: 0 0 20px rgba(79, 219, 255, 0.8), 0 0 45px rgba(79, 219, 255, 0.4);
+	animation: pulseFloat 2s ease-in-out infinite;
+	line-height: 1;
+	margin-bottom: 0.6rem;
 }
 
-#status-splash.fullsize--true {
-	height: 100%;
+@keyframes pulseFloat {
+	0%, 100% {
+		transform: translateY(0) scale(1);
+	}
+	50% {
+		transform: translateY(-6px) scale(1.08);
+		text-shadow: 0 0 28px rgba(255, 209, 77, 0.9), 0 0 55px rgba(79, 219, 255, 0.6);
+	}
+}
+
+.splash-title {
+	margin: 0;
+	font-size: 1.75rem;
+	font-weight: 800;
+	letter-spacing: 2px;
+	color: #4fdbff;
+	text-shadow: 0 0 20px rgba(79, 219, 255, 0.35);
+}
+
+.splash-sub {
+	margin-top: 0.25rem;
+	font-size: 0.9rem;
+	color: #8892b0;
+	letter-spacing: 0.5px;
+}
+
+.progress-container {
 	width: 100%;
-	object-fit: contain;
+	margin-top: 1.8rem;
 }
 
-#status-splash.use-filter--false {
-	image-rendering: pixelated;
+.progress-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 0.84rem;
+	margin-bottom: 0.5rem;
+	color: #a8b2d1;
 }
 
-#status-progress, #status-notice {
-	display: none;
+#progress-percent {
+	font-weight: 700;
+	color: #ffd14d;
+	font-family: monospace;
+	font-size: 0.95rem;
+}
+
+.progress-track {
+	width: 100%;
+	height: 12px;
+	background: #141824;
+	border: 1px solid #28334a;
+	border-radius: 999px;
+	overflow: hidden;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+#progress-bar {
+	height: 100%;
+	width: 0%;
+	background: linear-gradient(90deg, #4fdbff 0%, #00b4d8 60%, #ffd14d 100%);
+	border-radius: 999px;
+	box-shadow: 0 0 16px rgba(79, 219, 255, 0.7);
+	transition: width 0.12s ease-out;
+}
+
+.splash-tip {
+	margin-top: 1.75rem;
+	font-size: 0.8rem;
+	color: #8892b0;
+	background: rgba(19, 23, 34, 0.75);
+	border: 1px solid #242c40;
+	border-radius: 8px;
+	padding: 0.6rem 1rem;
+	line-height: 1.45;
+}
+
+.splash-tip kbd {
+	background: #1d2436;
+	border: 1px solid #35415f;
+	border-radius: 4px;
+	padding: 0.1rem 0.35rem;
+	color: #4fdbff;
+	font-family: monospace;
+	font-size: 0.82rem;
 }
 
 #status-progress {
-	bottom: 10%;
-	width: 50%;
-	margin: 0 auto;
+	display: none;
 }
 
 #status-notice {
+	display: none;
 	background-color: #5b3943;
 	border-radius: 0.5rem;
 	border: 1px solid #9b3943;
 	color: #e0e0e0;
-	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
 	line-height: 1.3;
-	margin: 0 2rem;
+	margin: 1rem 2rem;
 	overflow: hidden;
 	padding: 1rem;
 	text-align: center;
-	z-index: 1;
+	z-index: 101;
 }
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
-<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-
+		<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -104,28 +190,104 @@ body {
 		</noscript>
 
 		<div id="status">
-			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<div class="splash-box">
+				<div class="rhombus-glow">◆</div>
+				<h1 class="splash-title">ANTI-GRAVITY JUMP</h1>
+				<div class="splash-sub">4-Way Gravity Puzzle Platformer</div>
+
+				<div class="progress-container">
+					<div class="progress-header">
+						<span id="progress-status">Подготовка к запуску...</span>
+						<span id="progress-percent">0%</span>
+					</div>
+					<div class="progress-track">
+						<div id="progress-bar"></div>
+					</div>
+				</div>
+
+				<div class="splash-tip">
+					💡 <em>Управление:</em> стрелки <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> меняют гравитацию в полёте. Собери все ромбики ◆, чтобы открыть выход.
+				</div>
+			</div>
+
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
 		</div>
 
 		<script src="index.js"></script>
 		<script>
-// Reassemble split index.wasm parts (<25 MiB each for Cloudflare Pages limit)
+// Custom loader state
+const progressStatus = document.getElementById('progress-status');
+const progressPercent = document.getElementById('progress-percent');
+const progressBar = document.getElementById('progress-bar');
+const statusOverlay = document.getElementById('status');
+const statusProgress = document.getElementById('status-progress');
+const statusNotice = document.getElementById('status-notice');
+
+function setCustomProgress(pct, message) {
+	const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+	if (progressBar) progressBar.style.width = clamped + '%';
+	if (progressPercent) progressPercent.textContent = clamped + '%';
+	if (message && progressStatus) progressStatus.textContent = message;
+}
+
+// Reassemble split index.wasm parts (<25 MiB each) with streaming chunk progress
 (function() {
 	const origFetch = window.fetch.bind(window);
+	const TOTAL_WASM_BYTES = 39514754;
+	let loadedWasmBytes = 0;
+
+	async function fetchWithProgress(url) {
+		const resp = await origFetch(url);
+		if (!resp.ok) throw new Error('HTTP ' + resp.status + ' loading ' + url);
+
+		// If readable streams not supported or body missing, fallback to arrayBuffer
+		if (!resp.body || !resp.body.getReader) {
+			const buf = await resp.arrayBuffer();
+			loadedWasmBytes += buf.byteLength;
+			return new Uint8Array(buf);
+		}
+
+		const reader = resp.body.getReader();
+		const chunks = [];
+		let received = 0;
+
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+			chunks.push(value);
+			received += value.byteLength;
+			loadedWasmBytes += value.byteLength;
+
+			const mb = (loadedWasmBytes / (1024 * 1024)).toFixed(1);
+			const totalMb = (TOTAL_WASM_BYTES / (1024 * 1024)).toFixed(1);
+			const pct = Math.min(85, Math.round((loadedWasmBytes / TOTAL_WASM_BYTES) * 85));
+			setCustomProgress(pct, `Загрузка игрового ядра: ${pct}% (${mb} / ${totalMb} MB)`);
+		}
+
+		const combined = new Uint8Array(received);
+		let offset = 0;
+		for (const chunk of chunks) {
+			combined.set(chunk, offset);
+			offset += chunk.byteLength;
+		}
+		return combined;
+	}
+
 	window.fetch = async function(input, init) {
 		const url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
 		if (url.endsWith('index.wasm')) {
+			setCustomProgress(5, 'Подключение к серверу...');
 			const base = url.slice(0, -'index.wasm'.length);
-			const [r1, r2] = await Promise.all([
-				origFetch(base + 'index.wasm.part1', init),
-				origFetch(base + 'index.wasm.part2', init)
+			const [b1, b2] = await Promise.all([
+				fetchWithProgress(base + 'index.wasm.part1'),
+				fetchWithProgress(base + 'index.wasm.part2')
 			]);
-			const [b1, b2] = await Promise.all([r1.arrayBuffer(), r2.arrayBuffer()]);
+			setCustomProgress(88, 'Сборка WebAssembly ядра...');
 			const merged = new Uint8Array(b1.byteLength + b2.byteLength);
-			merged.set(new Uint8Array(b1), 0);
-			merged.set(new Uint8Array(b2), b1.byteLength);
+			merged.set(b1, 0);
+			merged.set(b2, b1.byteLength);
+			setCustomProgress(91, 'Компиляция WebAssembly...');
 			return new Response(merged.buffer, {
 				status: 200,
 				headers: { 'Content-Type': 'application/wasm', 'Content-Length': String(merged.byteLength) }
@@ -134,15 +296,12 @@ body {
 		return origFetch(input, init);
 	};
 })();
+
 const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":79064,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
 (function () {
-	const statusOverlay = document.getElementById('status');
-	const statusProgress = document.getElementById('status-progress');
-	const statusNotice = document.getElementById('status-notice');
-
 	let initializing = true;
 	let statusMode = '';
 
@@ -151,12 +310,15 @@ const engine = new Engine(GODOT_CONFIG);
 			return;
 		}
 		if (mode === 'hidden') {
-			statusOverlay.remove();
-			initializing = false;
+			setCustomProgress(100, 'Запуск игры!');
+			setTimeout(() => {
+				statusOverlay.classList.add('fade-out');
+				setTimeout(() => statusOverlay.remove(), 400);
+				initializing = false;
+			}, 200);
 			return;
 		}
 		statusOverlay.style.visibility = 'visible';
-		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
 		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
 		statusMode = mode;
 	}
@@ -190,46 +352,16 @@ const engine = new Engine(GODOT_CONFIG);
 	});
 
 	if (missing.length !== 0) {
-		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
-			let serviceWorkerRegistrationPromise;
-			try {
-				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
-			} catch (err) {
-				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
-			}
-			// There's a chance that installing the service worker would fix the issue
-			Promise.race([
-				serviceWorkerRegistrationPromise.then((registration) => {
-					if (registration != null) {
-						return Promise.reject(new Error('Service worker already exists.'));
-					}
-					return registration;
-				}).then(() => engine.installServiceWorker()),
-				// For some reason, `getRegistration()` can stall
-				new Promise((resolve) => {
-					setTimeout(() => resolve(), 2000);
-				}),
-			]).then(() => {
-				// Reload if there was no error.
-				window.location.reload();
-			}).catch((err) => {
-				console.error('Error while registering service worker:', err);
-			});
-		} else {
-			// Display the message as usual
-			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
-			displayFailureNotice(missingMsg + missing.join('\n'));
-		}
+		const missingMsg = 'Ошибка: браузер не поддерживает необходимые функции WebAssembly:\n';
+		displayFailureNotice(missingMsg + missing.join('\n'));
 	} else {
 		setStatusMode('progress');
 		engine.startGame({
 			'onProgress': function (current, total) {
 				if (current > 0 && total > 0) {
-					statusProgress.value = current;
-					statusProgress.max = total;
-				} else {
-					statusProgress.removeAttribute('value');
-					statusProgress.removeAttribute('max');
+					const ratio = current / total;
+					const overall = Math.min(98, 88 + Math.round(ratio * 10));
+					setCustomProgress(overall, `Инициализация движка: ${overall}%`);
 				}
 			},
 		}).then(() => {
@@ -240,4 +372,3 @@ const engine = new Engine(GODOT_CONFIG);
 		</script>
 	</body>
 </html>
-

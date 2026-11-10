@@ -68,13 +68,11 @@ export async function onRequestPost(context) {
     const CHAT_ID = context.env?.TELEGRAM_CHAT_ID;
 
     let tgSent = false;
-    if (BOT_TOKEN && CHAT_ID && body.notify !== false) {
+    // Notify in Telegram ONLY on actual gameplay milestones (e.g. level completion), not on every launch
+    if (BOT_TOKEN && CHAT_ID && body.notify !== false && event === "level_complete") {
       const when = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Berlin" });
       const loc = city ? `${country} (${city})` : country;
-      const title =
-        event === "level_complete"
-          ? `🏆 *Anti-Gravity Jump: пройден уровень!*`
-          : `🎮 *Anti-Gravity Jump: новый игрок запустил игру!*`;
+      const title = `🏆 *Anti-Gravity Jump: пройден уровень!*`;
       const details = level ? `\n📍 *Уровень:* ${level}` : "";
       const text = `${title}${details}\n🌍 *Локация:* ${loc}\n🔗 *Источник:* ${ref}\n🕒 *Время:* ${when}`;
 
