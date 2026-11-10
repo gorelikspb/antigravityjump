@@ -12,15 +12,25 @@
 
 [node name="Level00Tutorial" type="Node2D"]
 script = ExtResource("1_level")
-level_name = "Level 00 - Interactive Tutorial"
+level_name = "Tutorial: Gravity & Air Flips"
 level_bounds = Rect2(0, 0, 1920, 720)
 next_level = "res://src/levels/level_01.tscn"
+require_all_crystals = true
 
 [node name="Geometry" type="Node2D" parent="."]
 
 [node name="Ceiling" type="StaticBody2D" parent="Geometry"]
 script = ExtResource("4_block")
 size = Vector2(1920, 80)
+
+[node name="WallLeft" type="StaticBody2D" parent="Geometry"]
+script = ExtResource("4_block")
+size = Vector2(40, 720)
+
+[node name="WallRight" type="StaticBody2D" parent="Geometry"]
+position = Vector2(1880, 0)
+script = ExtResource("4_block")
+size = Vector2(40, 720)
 
 [node name="FloorRoom1" type="StaticBody2D" parent="Geometry"]
 position = Vector2(0, 640)
@@ -43,14 +53,19 @@ script = ExtResource("4_block")
 size = Vector2(480, 80)
 
 [node name="GoalLedge" type="StaticBody2D" parent="Geometry"]
-position = Vector2(1680, 620)
+position = Vector2(1680, 600)
 script = ExtResource("4_block")
-size = Vector2(240, 20)
+size = Vector2(240, 40)
+
+[node name="PitFloor" type="StaticBody2D" parent="Geometry"]
+position = Vector2(480, 700)
+script = ExtResource("4_block")
+size = Vector2(480, 20)
 
 [node name="Hazards" type="Node2D" parent="."]
 
 [node name="PitSpikes" type="Area2D" parent="Hazards"]
-position = Vector2(480, 688)
+position = Vector2(480, 672)
 script = ExtResource("5_spikes")
 size = Vector2(480, 32)
 
@@ -63,7 +78,7 @@ always_consume = true
 size = Vector2(32, 32)
 
 [node name="Crystal2" type="Area2D" parent="Pickups"]
-position = Vector2(1560, 260)
+position = Vector2(1560, 240)
 script = ExtResource("9_crystal")
 always_consume = true
 size = Vector2(32, 32)
@@ -71,14 +86,14 @@ size = Vector2(32, 32)
 [node name="Triggers" type="Node2D" parent="."]
 
 [node name="Checkpoint1" type="Area2D" parent="Triggers"]
-position = Vector2(928, 80)
+position = Vector2(940, 80)
 script = ExtResource("7_checkpoint")
-size = Vector2(32, 560)
+size = Vector2(40, 560)
 
 [node name="Goal" type="Area2D" parent="Triggers"]
-position = Vector2(1760, 580)
+position = Vector2(1760, 550)
 script = ExtResource("8_goal")
-size = Vector2(40, 40)
+size = Vector2(40, 50)
 
 [node name="TutorialLabels" type="Node2D" parent="."]
 
@@ -89,17 +104,19 @@ offset_right = 420.0
 offset_bottom = 510.0
 theme_override_colors/font_color = Color(0.9, 0.9, 1, 0.9)
 theme_override_font_sizes/font_size = 18
-text = "1. Move (A/D) & Jump (Space)"
+text = "1. Move: [A] / [D]   Jump: [Space]
+(Press [Tab] anytime to move with Arrows!)"
 horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="TutorialLabels"]
-offset_left = 520.0
+offset_left = 500.0
 offset_top = 450.0
-offset_right = 920.0
+offset_right = 940.0
 offset_bottom = 510.0
 theme_override_colors/font_color = Color(0.9, 0.9, 1, 0.9)
 theme_override_font_sizes/font_size = 18
-text = "2. Flip Gravity UP [Up Arrow] on ground, then DOWN [Down Arrow] after pit!"
+text = "2. Press [Up Arrow] to run on the CEILING!
+Clear the spikes, then press [Down Arrow] to land."
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -116,7 +133,7 @@ autowrap_mode = 2
 
 [node name="Label4" type="Label" parent="TutorialLabels"]
 offset_left = 1460.0
-offset_top = 180.0
+offset_top = 160.0
 offset_right = 1880.0
 offset_bottom = 240.0
 theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
@@ -124,7 +141,10 @@ theme_override_font_sizes/font_size = 16
 text = "Grab the floating Crystal near the ceiling, then enter the golden Exit!"
 horizontal_alignment = 1
 
-[node name="PlayerInstance" parent="." instance=ExtResource("2_player")]
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(120, 580)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(120, 580)
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]

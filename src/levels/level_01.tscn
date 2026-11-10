@@ -18,6 +18,10 @@ next_level = "res://src/levels/level_02.tscn"
 
 [node name="Geometry" type="Node2D" parent="."]
 
+[node name="LeftWall" type="StaticBody2D" parent="Geometry"]
+script = ExtResource("4_block")
+size = Vector2(40, 720)
+
 [node name="Ceiling" type="StaticBody2D" parent="Geometry"]
 script = ExtResource("4_block")
 size = Vector2(2064, 80)

@@ -1,7 +1,7 @@
 class_name HUD
 extends CanvasLayer
 ## In-level HUD. Listens ONLY to Level signals (injected via bind()).
-## Implements: design/gdd/level-flow.md (UI Requirements)
+## Tracks player idle time (shows 5s hint) and control scheme switches ([Tab]).
 
 @onready var _level_name: Label = %LevelName
 @onready var _timer: Label = %TimerLabel
@@ -11,6 +11,64 @@ extends CanvasLayer
 @onready var _complete_panel: Control = %CompletePanel
 @onready var _stats: Label = %StatsLabel
 @onready var _prompt: Label = %PromptLabel
+@onready var _idle_hint: Control = %IdleHint
+@onready var _idle_label: Label = %IdleLabel
+@onready var _scheme_toast: Label = %SchemeToast
+
+var _idle_time: float = 0.0
+const IDLE_THRESHOLD: float = 5.0
+var _toast_timer: float = 0.0
+
+
+func _ready() -> void:
+	if has_node("/root/InputBootstrap"):
+		var ib := get_node("/root/InputBootstrap")
+		ib.scheme_changed.connect(_on_scheme_changed)
+
+
+func _process(delta: float) -> void:
+	if _toast_timer > 0.0:
+		_toast_timer -= delta
+		if _toast_timer <= 0.0 and _scheme_toast:
+			_scheme_toast.visible = false
+
+	if _has_any_input():
+		_idle_time = 0.0
+		if _idle_hint and _idle_hint.visible:
+			_idle_hint.visible = false
+	else:
+		_idle_time += delta
+		if _idle_time >= IDLE_THRESHOLD and _idle_hint and not _idle_hint.visible and not _complete_panel.visible:
+			_show_idle_hint()
+
+
+func _has_any_input() -> bool:
+	return Input.is_action_pressed(&"move_left") or Input.is_action_pressed(&"move_right") \
+		or Input.is_action_pressed(&"move_up") or Input.is_action_pressed(&"move_down") \
+		or Input.is_action_pressed(&"jump") \
+		or Input.is_action_pressed(&"gravity_up") or Input.is_action_pressed(&"gravity_down") \
+		or Input.is_action_pressed(&"gravity_left") or Input.is_action_pressed(&"gravity_right") \
+		or Input.is_action_pressed(&"restart") or Input.is_action_pressed(&"menu")
+
+
+func _show_idle_hint() -> void:
+	var move_str := "A/D"
+	var flip_str := "Arrows"
+	if has_node("/root/InputBootstrap"):
+		var ib := get_node("/root/InputBootstrap")
+		if ib.current_scheme == ib.ControlScheme.ARROWS_MOVE_WASD_FLIP:
+			move_str = "Arrows"
+			flip_str = "W/A/S/D"
+
+	_idle_label.text = "💡 Need help? Move: [%s]  ·  Jump: [Space]  ·  Flip Gravity: [%s]  ·  [Tab] Swap Controls  ·  Restart: [R]" % [move_str, flip_str]
+	_idle_hint.visible = true
+
+
+func _on_scheme_changed(scheme_name: String) -> void:
+	if _scheme_toast:
+		_scheme_toast.text = "Controls: " + scheme_name
+		_scheme_toast.visible = true
+		_toast_timer = 3.0
 
 
 func bind(level: Level) -> void:
