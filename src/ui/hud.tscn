@@ -34,7 +34,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.85, 1, 1)
-text = "◆ Crystals: 0 / 0"
+text = "Crystals: 0 / 0"
 
 [node name="GravityIndicator" type="Control" parent="."]
 unique_name_in_owner = true

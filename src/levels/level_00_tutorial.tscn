@@ -99,7 +99,7 @@ offset_right = 920.0
 offset_bottom = 510.0
 theme_override_colors/font_color = Color(0.9, 0.9, 1, 0.9)
 theme_override_font_sizes/font_size = 18
-text = "2. Flip Gravity UP (↑) on ground, then DOWN (↓) after pit!"
+text = "2. Flip Gravity UP [Up Arrow] on ground, then DOWN [Down Arrow] after pit!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -110,7 +110,7 @@ offset_right = 1420.0
 offset_bottom = 360.0
 theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
 theme_override_font_sizes/font_size = 18
-text = "3. EXIT IS LOCKED! Collect ALL Rhombus Crystals (◆) to unlock Exit & refill flips!"
+text = "3. EXIT IS LOCKED! Collect all Energy Crystals to unlock the Exit & refill flips!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -121,7 +121,7 @@ offset_right = 1880.0
 offset_bottom = 240.0
 theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
 theme_override_font_sizes/font_size = 16
-text = "Grab Crystal near ceiling, then enter golden Exit!"
+text = "Grab the floating Crystal near the ceiling, then enter the golden Exit!"
 horizontal_alignment = 1
 
 [node name="PlayerInstance" parent="." instance=ExtResource("2_player")]

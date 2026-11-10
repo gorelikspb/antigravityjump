@@ -44,8 +44,8 @@ func _on_crystals_changed(collected: int, total: int, required: bool) -> void:
 		_crystals.visible = false
 		return
 	_crystals.visible = true
-	var suffix := " (UNLOCKED!)" if (required and collected >= total) else (" (Required to unlock Exit)" if required else "")
-	_crystals.text = "◆ Rhombuses: %d / %d%s" % [collected, total, suffix]
+	var suffix := " (EXIT UNLOCKED!)" if (required and collected >= total) else (" (Exit Locked)" if required else "")
+	_crystals.text = "Crystals: %d / %d%s" % [collected, total, suffix]
 
 
 func _on_gravity_changed(dir: int) -> void:
@@ -53,7 +53,7 @@ func _on_gravity_changed(dir: int) -> void:
 
 
 func _on_level_completed(seconds: float, deaths: int, has_next: bool) -> void:
-	var medal := "★ GOLD" if (deaths == 0 and seconds <= 25.0) else ("◆ SILVER" if seconds <= 45.0 else "● BRONZE")
+	var medal := "[GOLD MEDAL]" if (deaths == 0 and seconds <= 25.0) else ("[SILVER MEDAL]" if seconds <= 45.0 else "[BRONZE MEDAL]")
 	_stats.text = "Rank  %s\nTime  %s\nDeaths  %d" % [medal, format_time(seconds), deaths]
-	_prompt.text = ("[Enter] Next level" if has_next else "[Enter] Main Menu") + "   ·   [R] Restart   ·   [Esc] Menu"
+	_prompt.text = ("[Enter] Next Level" if has_next else "[Enter] Main Menu") + "   ·   [R] Restart   ·   [Esc] Menu"
 	_complete_panel.visible = true

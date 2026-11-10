@@ -40,7 +40,7 @@ func get_best_deaths(level_id: String) -> int:
 
 static func compute_medal(time_sec: float, deaths: int, gold_time: float = 22.0, silver_time: float = 40.0) -> String:
 	if deaths == 0 and time_sec <= gold_time:
-		return "★ GOLD"
+		return "[GOLD]"
 	if time_sec <= silver_time:
-		return "◆ SILVER"
-	return "● BRONZE"
+		return "[SILVER]"
+	return "[BRONZE]"
