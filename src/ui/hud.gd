@@ -1,7 +1,7 @@
 class_name HUD
 extends CanvasLayer
 ## In-level HUD. Listens ONLY to Level signals (injected via bind()).
-## Tracks player idle time (shows 5s hint) and control scheme switches ([Tab]).
+## Tracks player idle time (shows hint after 3.5s of inactivity) and HUD stats.
 
 @onready var _level_name: Label = %LevelName
 @onready var _timer: Label = %TimerLabel
@@ -16,8 +16,11 @@ extends CanvasLayer
 @onready var _scheme_toast: Label = %SchemeToast
 
 var _idle_time: float = 0.0
-const IDLE_THRESHOLD: float = 5.0
+const IDLE_THRESHOLD: float = 3.5
 var _toast_timer: float = 0.0
+var _level_ref: Level = null
+var _player_node: CharacterBody2D = null
+var _last_pos: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -32,7 +35,15 @@ func _process(delta: float) -> void:
 		if _toast_timer <= 0.0 and _scheme_toast:
 			_scheme_toast.visible = false
 
-	if _has_any_input():
+	var player_moved := false
+	if _player_node and is_instance_valid(_player_node):
+		var cur_pos := _player_node.global_position
+		if cur_pos.distance_to(_last_pos) > 2.0:
+			player_moved = true
+		_last_pos = cur_pos
+
+	var has_input := _has_any_input()
+	if has_input or player_moved:
 		_idle_time = 0.0
 		if _idle_hint and _idle_hint.visible:
 			_idle_hint.visible = false
@@ -52,15 +63,24 @@ func _has_any_input() -> bool:
 
 
 func _show_idle_hint() -> void:
-	var move_str := "A/D"
-	var flip_str := "Arrows"
+	var move_str := "A / D"
+	var flip_str := "Arrows (↑ ↓ ← →)"
 	if has_node("/root/InputBootstrap"):
 		var ib := get_node("/root/InputBootstrap")
 		if ib.current_scheme == ib.ControlScheme.ARROWS_MOVE_WASD_FLIP:
 			move_str = "Arrows"
 			flip_str = "W/A/S/D"
 
-	_idle_label.text = "💡 Need help? Move: [%s]  ·  Jump: [Space]  ·  Flip Gravity: [%s]  ·  [Tab] Swap Controls  ·  Restart: [R]" % [move_str, flip_str]
+	var is_tutorial := _level_ref != null and (_level_ref.level_name.to_lower().contains("tutorial") or _level_ref.name.to_lower().contains("tutorial"))
+	if is_tutorial:
+		var px := _player_node.global_position.x if (_player_node and is_instance_valid(_player_node)) else 0.0
+		if px < 900.0:
+			_idle_label.text = "💡 Stuck? Press [Up Arrow] on ground to walk on the ceiling! (Move: [%s]  ·  Jump: [Space])" % move_str
+		else:
+			_idle_label.text = "💡 Collect all floating crystals to unlock the Exit! (Touch crystal in air to restore flip)"
+	else:
+		_idle_label.text = "💡 Move: [%s]  ·  Jump: [Space]  ·  Flip Gravity: [%s]  ·  Restart: [R]" % [move_str, flip_str]
+
 	_idle_hint.visible = true
 
 
@@ -68,11 +88,14 @@ func _on_scheme_changed(scheme_name: String) -> void:
 	if _scheme_toast:
 		_scheme_toast.text = "Controls: " + scheme_name
 		_scheme_toast.visible = true
-		_toast_timer = 3.0
+		_toast_timer = 2.5
 
 
 func bind(level: Level) -> void:
-	_level_name.text = level.level_name
+	_level_ref = level
+	_player_node = level.get_node_or_null("Player") as CharacterBody2D
+	if _player_node:
+		_last_pos = _player_node.global_position
 	_complete_panel.visible = false
 	level.timer_updated.connect(_on_timer_updated)
 	level.deaths_changed.connect(_on_deaths_changed)
