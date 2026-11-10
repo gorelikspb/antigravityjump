@@ -6,7 +6,8 @@ extends RectTrigger
 
 signal collected
 
-@export var respawn_time: float = 2.5
+@export var respawns: bool = false
+@export var respawn_time: float = 0.0
 @export var always_consume: bool = false
 @export var color: Color = Color(0.2, 0.85, 1.0)
 @export var inactive_color: Color = Color(0.2, 0.85, 1.0, 0.25)
@@ -33,7 +34,7 @@ func reset() -> void:
 
 func _process(delta: float) -> void:
 	_pulse_t += delta
-	if not is_active:
+	if not is_active and respawns and respawn_time > 0.0:
 		_timer -= delta
 		if _timer <= 0.0:
 			is_active = true
@@ -48,7 +49,7 @@ func _on_player_entered(player: Player) -> void:
 	var refilled: bool = player.refill_air_charges()
 	if refilled or always_consume:
 		is_active = false
-		_timer = respawn_time
+		_timer = respawn_time if respawns else 0.0
 		if has_node("/root/SoundManager"):
 			get_node("/root/SoundManager").play(AudioSynthesizer.Sound.CHECKPOINT, 1.3)
 		collected.emit()
