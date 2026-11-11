@@ -70,6 +70,16 @@ func _ready() -> void:
 			c.always_consume = true
 			c.collected.connect(_on_crystal_collected.bind(c))
 
+	if has_node("/root/SaveManager"):
+		require_all_crystals = bool(get_node("/root/SaveManager").call(&"get_require_all_crystals"))
+
+	var tut_label3 := get_node_or_null(^"TutorialLabels/Label3") as Label
+	if tut_label3:
+		if require_all_crystals:
+			tut_label3.text = "3. HARD MODE: EXIT IS LOCKED! Collect all Crystals.\n- Touching a Crystal in air RESTORES your flip!\n- Crystals stay collected once grabbed."
+		else:
+			tut_label3.text = "3. BONUS CRYSTALS: Touching a Crystal RESTORES your flip!\n- Exit is OPEN in Normal Mode (crystals are optional).\n- Toggle HARD MODE in Main Menu to lock Exits!"
+
 	_player.respawn(_respawn_position, _respawn_gravity)
 	_update_goal_lock()
 	deaths_changed.emit(_deaths)

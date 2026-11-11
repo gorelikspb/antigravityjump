@@ -115,9 +115,9 @@ offset_bottom = 540.0
 theme_override_colors/font_color = Color(0.9, 0.9, 1, 0.9)
 theme_override_font_sizes/font_size = 16
 text = "2. Press [Up Arrow] on ground to run on CEILING!
-• On walls/floor: flips are UNLIMITED.
-• In air: 1 flip allowed (CYAN = ready, GRAY = spent).
-• Press [Down Arrow] to drop back to floor after spikes."
+- On walls/floor: flips are UNLIMITED.
+- In air: 1 flip allowed (CYAN = ready, GRAY = spent).
+- Press [Down Arrow] to drop back to floor after spikes."
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -128,9 +128,9 @@ offset_right = 1440.0
 offset_bottom = 370.0
 theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
 theme_override_font_sizes/font_size = 16
-text = "3. EXIT IS LOCKED! Collect all Energy Crystals.
-• Touching a Crystal in air RESTORES your flip!
-• Crystals stay collected once grabbed."
+text = "3. BONUS CRYSTALS: Touching a Crystal RESTORES your flip!
+- Exit is OPEN in Normal Mode (crystals are optional).
+- Toggle HARD MODE in Main Menu to lock Exits!"
 horizontal_alignment = 1
 autowrap_mode = 2
 

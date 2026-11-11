@@ -3,6 +3,7 @@ extends Control
 ## Main Menu UI script with streamlined stage selection and continue flow.
 
 @onready var _btn_play: Button = %BtnPlay
+@onready var _btn_mode: Button = %BtnMode
 @onready var _btn_level_0: Button = %BtnLevel0
 @onready var _btn_level_1: Button = %BtnLevel1
 @onready var _btn_level_2: Button = %BtnLevel2
@@ -37,6 +38,9 @@ func _ready() -> void:
 
 	_btn_play.text = "> PLAY (" + next_stage_name + ")"
 	_btn_play.pressed.connect(func() -> void: _load_level(next_stage_path))
+
+	_refresh_mode_button()
+	_btn_mode.pressed.connect(_on_toggle_mode)
 
 	_setup_stage_button(_btn_level_0, STAGES[0])
 	_setup_stage_button(_btn_level_1, STAGES[1])
@@ -76,3 +80,23 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _load_level(path: String) -> void:
 	get_tree().change_scene_to_file(path)
+
+
+func _on_toggle_mode() -> void:
+	if has_node("/root/SaveManager"):
+		var sm := get_node("/root/SaveManager")
+		var curr := bool(sm.call(&"get_require_all_crystals"))
+		sm.call(&"set_require_all_crystals", not curr)
+	_refresh_mode_button()
+
+
+func _refresh_mode_button() -> void:
+	var hard := false
+	if has_node("/root/SaveManager"):
+		hard = bool(get_node("/root/SaveManager").call(&"get_require_all_crystals"))
+	if hard:
+		_btn_mode.text = "Difficulty: HARD (All Crystals Required to Unlock Exit)"
+		_btn_mode.set("theme_override_colors/font_color", Color(1.0, 0.72, 0.3))
+	else:
+		_btn_mode.text = "Difficulty: NORMAL (Open Exit · Crystals Optional)"
+		_btn_mode.set("theme_override_colors/font_color", Color(0.31, 0.86, 1.0))

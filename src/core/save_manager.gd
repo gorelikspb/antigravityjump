@@ -38,6 +38,15 @@ func get_best_deaths(level_id: String) -> int:
 	return int(_cfg.get_value(level_id, "best_deaths", -1))
 
 
+func get_require_all_crystals() -> bool:
+	return bool(_cfg.get_value("settings", "require_all_crystals", false))
+
+
+func set_require_all_crystals(val: bool) -> void:
+	_cfg.set_value("settings", "require_all_crystals", val)
+	_cfg.save(SAVE_PATH)
+
+
 static func compute_medal(time_sec: float, deaths: int, gold_time: float = 22.0, silver_time: float = 40.0) -> String:
 	if deaths == 0 and time_sec <= gold_time:
 		return "[GOLD]"

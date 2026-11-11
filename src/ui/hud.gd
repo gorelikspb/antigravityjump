@@ -74,7 +74,7 @@ func _has_any_input() -> bool:
 
 func _show_idle_hint() -> void:
 	var move_str := "A / D"
-	var flip_str := "Arrows (↑ ↓ ← →)"
+	var flip_str := "Arrows (Up/Down/Left/Right)"
 	if has_node("/root/InputBootstrap"):
 		var ib := get_node("/root/InputBootstrap")
 		if ib.current_scheme == ib.ControlScheme.ARROWS_MOVE_WASD_FLIP:
@@ -85,11 +85,13 @@ func _show_idle_hint() -> void:
 	if is_tutorial:
 		var px := _player_node.global_position.x if (_player_node and is_instance_valid(_player_node)) else 0.0
 		if px < 900.0:
-			_idle_label.text = "💡 Stuck? Press [Up Arrow] on ground to walk on the ceiling! (Move: [%s]  ·  Jump: [Space])" % move_str
+			_idle_label.text = "TIP: Press [Up Arrow] on ground to walk on the ceiling! (Move: [%s]  ·  Jump: [Space])" % move_str
+		elif _level_ref.require_all_crystals:
+			_idle_label.text = "TIP: Collect all floating crystals to unlock the Exit! (Touch crystal in air to restore flip)"
 		else:
-			_idle_label.text = "💡 Collect all floating crystals to unlock the Exit! (Touch crystal in air to restore flip)"
+			_idle_label.text = "TIP: Touch crystals in air to restore your flip, or head right to the golden Exit!"
 	else:
-		_idle_label.text = "💡 Move: [%s]  ·  Jump: [Space]  ·  Flip Gravity: [%s]  ·  Restart: [R]" % [move_str, flip_str]
+		_idle_label.text = "TIP: Move: [%s]  ·  Jump: [Space]  ·  Flip Gravity: [%s]  ·  Restart: [R]" % [move_str, flip_str]
 
 	_idle_hint.visible = true
 
@@ -103,6 +105,7 @@ func _on_scheme_changed(scheme_name: String) -> void:
 
 func bind(level: Level) -> void:
 	_level_ref = level
+	_level_name.text = level.level_name
 	_player_node = level.get_node_or_null("Player") as CharacterBody2D
 	if _player_node:
 		_last_pos = _player_node.global_position
@@ -135,7 +138,11 @@ func _on_crystals_changed(collected: int, total: int, required: bool) -> void:
 		_crystals.visible = false
 		return
 	_crystals.visible = true
-	var suffix := " (EXIT UNLOCKED!)" if (required and collected >= total) else (" (Exit Locked)" if required else "")
+	var suffix := ""
+	if required:
+		suffix = " (EXIT UNLOCKED!)" if collected >= total else " (Exit Locked)"
+	else:
+		suffix = " (ALL COLLECTED!)" if collected >= total else " (Bonus)"
 	_crystals.text = "Crystals: %d / %d%s" % [collected, total, suffix]
 
 
@@ -146,28 +153,28 @@ func _on_gravity_changed(dir: int) -> void:
 func _evaluate_medal(seconds: float, deaths: int) -> Dictionary:
 	var gold_time := 25.0
 	var silver_time := 45.0
-	
+
 	if deaths == 0 and seconds <= gold_time:
 		return {
-			"title": "🥇 ЗОЛОТАЯ МЕДАЛЬ (GOLD)",
+			"title": "[GOLD MEDAL]",
 			"color": Color(1.0, 0.85, 0.2),
-			"reason": "Идеально: 0 смертей и время быстрее 25 с! (Ваш результат: %.1fs)" % seconds,
+			"reason": "Perfect! 0 deaths & finished under 25s (Your time: %.1fs)." % seconds,
 		}
 	elif deaths <= 1 and seconds <= silver_time:
 		var why := ""
 		if deaths > 0:
-			why = "Серебро: допущена %d смерть. Для золота требуется 0 смертей и время < 25 с." % deaths
+			why = "Silver: %d death(s). Need 0 deaths & time < 25s for Gold." % deaths
 		else:
-			why = "Серебро: время %.1fs. Для золота требуется быстрее 25 с при 0 смертей." % seconds
+			why = "Silver: time %.1fs. Need under 25s with 0 deaths for Gold." % seconds
 		return {
-			"title": "🥈 СЕРЕБРЯНАЯ МЕДАЛЬ (SILVER)",
+			"title": "[SILVER MEDAL]",
 			"color": Color(0.85, 0.88, 0.95),
 			"reason": why,
 		}
 	else:
-		var why := "Уровень пройден! Критерии золота: 0 смертей и время < 25 с (у вас %d смертей, время: %.1fs)." % [deaths, seconds]
+		var why := "Cleared! Gold requires 0 deaths & time < 25s (You: %d deaths, %.1fs)." % [deaths, seconds]
 		return {
-			"title": "🥉 БРОНЗОВАЯ МЕДАЛЬ (BRONZE)",
+			"title": "[BRONZE MEDAL]",
 			"color": Color(0.95, 0.65, 0.35),
 			"reason": why,
 		}
@@ -178,12 +185,12 @@ func _on_level_completed(seconds: float, deaths: int, has_next: bool) -> void:
 	_medal_label.text = medal_info["title"]
 	_medal_label.set("theme_override_colors/font_color", medal_info["color"])
 	_medal_reason.text = medal_info["reason"]
-	_stats.text = "Время: %s   ·   Смертей: %d" % [format_time(seconds), deaths]
+	_stats.text = "Time: %s  ·  Deaths: %d" % [format_time(seconds), deaths]
 
 	if has_next:
-		_btn_next.text = "► СЛЕДУЮЩИЙ УРОВЕНЬ  (Enter)"
+		_btn_next.text = "> NEXT LEVEL  (Enter)"
 	else:
-		_btn_next.text = "► ГЛАВНОЕ МЕНЮ  (Enter)"
+		_btn_next.text = "> MAIN MENU  (Enter)"
 
 	_complete_panel.visible = true
 	_btn_next.grab_focus()
